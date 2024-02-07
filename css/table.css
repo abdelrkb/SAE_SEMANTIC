@@ -1,0 +1,53 @@
+.glassmorphism {
+    width: 75%;
+    height: auto;
+    border-radius: 8px;
+    padding: 1.875rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    margin: 0 auto; /* Ajoutez cette ligne pour centrer horizontalement */
+}
+
+.table-responsive {
+    min-height: fit-content;
+    max-height: 100vh;
+    overflow: auto;
+}
+
+.table thead th {
+    position: sticky;
+    top: 0;
+    background: #000; /* Ajustez cette couleur en fonction de vos besoins */
+    color: #fff; /* Ajustez cette couleur en fonction de vos besoins */
+}
+
+.gold, .gold td {
+    background: linear-gradient(to right, #FFD700, #FFDF00, #FFEC8B, #FFD700, #DAA520, #FFC125, #FFD700, #FFB90F, #D4AF37, #FFD700);
+    animation: Gradient 5s ease infinite;
+}
+
+.silver, .silver td {
+    background: linear-gradient(to right, #C0C0C0, #D3D3D3, #DCDCDC, #C0C0C0, #E0E0E0, #F0F0F0, #C0C0C0, #EAEAEA, #AAAAAA, #C0C0C0, #8C8C8C, #A9A9A9, #C0C0C0, #B0C4DE, #C0C0C0);
+    animation: Gradient 5s ease infinite;
+}
+
+.bronze, .bronze td {
+    background: linear-gradient(to right, #CD7F32, #8B4513, #804A00, #CD7F32, #B87333, #B8860B, #CD7F32, #D2691E, #CD7F32);
+    animation: Gradient 5s ease infinite;
+}
+
+@keyframes Gradient {
+    0% {
+        background-position: 0 50%
+    }
+
+    50% {
+        background-position: 100% 50%
+    }
+
+    100% {
+        background-position: 0 50%
+    }
+}

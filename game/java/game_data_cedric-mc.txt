@@ -1,0 +1,14 @@
+Mots de départ :
+voiture,561464
+bus,1715044
+Liste des mots :
+voiture, offset: 561464
+bus, offset: 1715044
+bleu, offset: 1242237
+vert, offset: 1272486
+camion, offset: 4406863
+arbre, offset: 2025981
+moto, offset: 2069496
+Distance entre les mots :
+voiture-bus, distance: 52.36
+voiture-vert, distance: 53.52

@@ -1,0 +1,19 @@
+.regles p, .regles h2, .regles h3 {
+    color: white;
+}
+
+h2 {
+    font-size: 24px; /* Taille de la police pour les h2 */
+    color: #FFFFFF; /* Couleur blanche, à ajuster selon votre design */
+    margin-bottom: 20px; /* Espace en dessous des h2 */
+    padding-bottom: 10px; /* Espace intérieur en dessous des h2 */
+    border-bottom: 2px solid #FFFFFF; /* Ligne de séparation en dessous des h2 */
+    text-transform: uppercase; /* Optionnel: transforme le texte en majuscules */
+}
+
+h3 {
+    font-size: 18px; /* Taille de la police pour les h3, plus petite que h2 */
+    color: #CCCCCC; /* Couleur grise, pour les distinguer des h2 */
+    margin-top: 20px; /* Espace au-dessus des h3 */
+    margin-bottom: 10px; /* Espace en dessous des h3 */
+}
