@@ -27,7 +27,7 @@ int main(int argc, char **argv) {
     }
 
     StaticTree st = readLexFile("C/arbre_lexicographique.lex");
-    long newWordOffset = findWord("C/arbre_lexicographique.lex", argv[2]);
+    long newWordOffset = findWord(&st, argv[2]);
 
     // Récupérer le pseudo à partir des arguments du programme
     char *pseudo = argv[3];

@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
     for (int i = 0; i < wordCount; i++) {
         strcpy(words[i].word, argv[i + 2]);
         // Vous pouvez utiliser la fonction findWord ici pour trouver l'offset
-        words[i].offset = findWord("C/arbre_lexicrographique.lex", words[i].word);
+        words[i].offset = findWord(&st, words[i].word);
     }
 
     // Calculer les distances entre chaque paire de mots

@@ -38,4 +38,3 @@ void exportStaticTreeToFile(StaticTree* st, const char* filename) {
     // Fermer le fichier
     fclose(file);
 }
-

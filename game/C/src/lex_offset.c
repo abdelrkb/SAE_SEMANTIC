@@ -44,67 +44,41 @@ StaticTree readLexFile(const char *filename) {
     return st;
 }
 
-// Fonction pour lire un ArrayCell à partir du fichier à un index spécifié
-int readArrayCell(FILE *file, long index, ArrayCell *cell) {
-    fseek(file, sizeof(LexHeader) + index * sizeof(ArrayCell), SEEK_SET);
-    if (fread(cell, sizeof(ArrayCell), 1, file) != 1) {
-        perror("Erreur de lecture du fichier .lex");
-        return -1; // Indique une erreur
-    }
-    return 0; // Succès
-}
+// Rechercher un mot dans un StaticTree et renvoyer l'offset du mot s'il est présent.
+long findWord(StaticTree* st, const char* word) {
+    int index = 0; // Commencer à la racine de l'arbre
 
-long findWord(const char *filename, const char *word) {
-    FILE *file = fopen(filename, "rb");
-    if (file == NULL) {
-        perror("Erreur d'ouverture du fichier .lex");
-        return -1; // Indique une erreur
-    }
+    for (int wordIndex = 0; word[wordIndex] != '\0'; ++wordIndex) { // Boucle qui parcourt tous les caractères du mot
+        // Si on est au début du mot, on doit chercher à partir de la racine
+        // Sinon, on cherche à partir du premier enfant du nœud actuel
+        int searchIndex = (wordIndex == 0) ? 0 : st->nodeArray[index].firstChild;
+        int found = 0; // 0 signifie que le caractère n'a pas été trouvé
 
-    LexHeader header;
-    if (fread(&header, sizeof(LexHeader), 1, file) != 1) {
-        perror("Erreur de lecture de l'en-tête du fichier .lex");
-        fclose(file);
-        return -1; // Indique une erreur
-    }
+        // Si nous ne sommes pas au début du mot, le premier enfant devient le nœud de départ
+        // Sinon, l'indice actuel est le nœud de départ
+        int siblingsToCheck = (wordIndex == 0) ? st->nNodes : st->nodeArray[index].nSiblings;
 
-    long index = 0; // Commence à la racine
-    ArrayCell cell;
-
-    for (int wordIndex = 0; word[wordIndex] != '\0'; ++wordIndex) {
-        int found = 0; // Indicateur de réussite
-
-        // Si on est au début du mot, on commence à la racine; sinon, au premier enfant
-        long searchIndex = (wordIndex == 0) ? 0 : cell.firstChild;
-        
-        while (searchIndex != -1) {
-            if (readArrayCell(file, searchIndex, &cell) == -1) {
-                fclose(file);
-                return -1; // Indique une erreur
-            }
-
-            if (cell.elem == word[wordIndex]) {
+        // Parcourir les frères du nœud actuel si nous ne sommes pas à la racine
+        // ou tous les nœuds si nous sommes à la racine
+        for (int i = 0; i <= siblingsToCheck + 1; ++i) {
+            if (st->nodeArray[searchIndex].elem == word[wordIndex]) {
                 found = 1; // Caractère trouvé
+                index = searchIndex; // Mettre à jour l'indice pour le prochain tour de boucle
                 break; // Sortir de la boucle
             }
-            searchIndex++; // Passez au frère suivant
+            searchIndex++; // Passer à l'indice suivant dans la recherche
         }
 
         if (!found) {
-            fclose(file);
-            return -1; // Mot non trouvé
+            return -1; // Si le caractère n'est pas trouvé, retourner -1
         }
     }
 
-    // Vérifie si le mot est terminé par '\0' dans le fichier .lex
-    if (cell.firstChild != -1) {
-        ArrayCell endCell;
-        if (readArrayCell(file, cell.firstChild, &endCell) != -1 && endCell.elem == '\0') {
-            fclose(file);
-            return endCell.offset; // Retourne l'offset du mot
-        }
+    // Après avoir trouvé tous les caractères, vérifier le caractère terminal '\0'
+    if (st->nodeArray[index].firstChild != -1 && 
+        st->nodeArray[st->nodeArray[index].firstChild].elem == '\0') {
+        return st->nodeArray[st->nodeArray[index].firstChild].offset;
     }
 
-    fclose(file);
-    return -1; // Mot non trouvé
+    return -1; // Si le caractère de fin '\0' n'est pas trouvé, retourner -1
 }

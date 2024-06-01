@@ -24,7 +24,10 @@ int main(int argc, char **argv) {
         return EXIT_FAILURE;
     }
 
-    long offset = findWord("C/arbre_lexicographique.lex", argv[2]);
+    // Utilisez le premier argument comme nom de fichier
+    StaticTree st = readLexFile(argv[1]);
+
+    long offset = findWord(&st, argv[2]);
 
     if (offset != -1) {
         printf("%ld\n", offset);
@@ -34,4 +37,3 @@ int main(int argc, char **argv) {
 
     return 0;   
 }
-

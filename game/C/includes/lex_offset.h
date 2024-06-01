@@ -9,8 +9,7 @@
 
 StaticTree readLexFile(const char *filename);
 
-long findWord(const char *filename, const char *word);
+long findWord(StaticTree* st, const char* word);
 
-int readArrayCell(FILE *file, long index, ArrayCell *cell);
 
 #endif
