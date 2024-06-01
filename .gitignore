@@ -3,3 +3,11 @@ conf.bkp.php
 PHPMailer
 game/C/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin
 game/C/fasttext-fr.bin
+game/partie/resultjava_abdel1.txt
+game/partie/resultjava_abdel1.txt
+game/C/bin/add_word
+game/C/bin/build_lex_index
+game/C/bin/lev_similarity
+game/C/bin/new_game
+game/C/bin/sem_similarity
+game/C/bin/dictionary_lookup
