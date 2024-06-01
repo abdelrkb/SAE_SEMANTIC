@@ -1,0 +1,27 @@
+Moteurs-score
+
+Auteurs : Chamsedine AMOUCHE, Thamiz SARBOUDINE, Cédric MARIYA-CONSTANTINE, Yacine ZEMOUCHE
+
+Commandes gcc à lancer à la racine du projet pour compiler le code :
+
+gcc src/dictionary_lookup.c src/lex_offset.c src/cstree.c src/export.c -o ./bin/dictionary_lookup
+gcc src/lev_similarity.c src/lev_fonctions.c -o ./bin/lev_similarity
+gcc src/word2vec_dict_builder.c src/cstree.c src/export.c -o ./bin/build_lex_index
+gcc src/sem_similarity.c src/sem_fonctions.c src/cstree.c src/export.c src/lex_offset.c -o  ./bin/sem_similarity -lm
+gcc src/newGame.c src/cstree.c src/export.c src/sem_fonctions.c src/lev_fonctions.c src/lex_offset.c -o ./bin/new_game -lm
+gcc src/addWord.c src/cstree.c src/export.c src/sem_fonctions.c src/lev_fonctions.c src/lex_offset.c -o ./bin/add_word -lm
+
+Il faut placer le fichier .bin dans la racine du projet (Nous avons utilisé dans le cadre de nos tests et notre projet le fichier fourni par Mr. Chilowicz)
+Donc si vous voulez utiliser un .bin avec une autre dimension il faudra modifier la ligne 12 du fichier sem_fonctions.c "const long long max_size = 300; "
+Et remplacer par les dimensions de votre fichier.
+
+Pour lancer les executables :
+
+./bin/nom_executables
+
+Si vous devez mettre des paramètres pour les dictionnaires (.bin ou .lex) il faut juste mettre le nom du fichier car nous executons les commandes à la racine et les fichiers sont stockés également à la racine
+
+Pour générer le fichier .lex il faut appeler build_lex_index avec le .bin en argument et vous obtiendrez "arbre_lexicographique.lex" que vous pourrez utilisez pour les autre executables
+
+
+(add_word, build_lex_index, dictionary_lookup, lev_similarity, new_game, sem_similarity)

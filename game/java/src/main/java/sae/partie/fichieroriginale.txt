@@ -1,0 +1,60 @@
+Mots de départ :
+voiture,561464
+bus,1715044
+Liste des mots :
+voiture, offset: 561464
+bus, offset: 1715044
+bleu, offset: 1242237
+vert, offset: 1272486
+camion, offset: 4406863
+arbre, offset: 2025981
+moto, offset: 2069496
+Distance entre les mots :
+voiture-bus,52.36
+voiture-bleu, distance: 50.95
+bus-bleu, distance: 48.44
+voiture-vert, distance: 53.52
+bus-vert, distance: 34.58
+bleu-vert, distance: 33.32
+voiture-camion, distance: 27.83
+bus-camion, distance: 28.11
+bleu-camion, distance: 27.85
+vert-camion, distance: 27.26
+voiture-arbre, distance: 51.68
+bus-arbre, distance: 38.79
+bleu-arbre, distance: 29.92
+vert-arbre, distance: 38.51
+camion-arbre, distance: 35.17
+voiture-moto, distance: 45.70
+bus-moto, distance: 29.76
+bleu-moto, distance: 28.22
+vert-moto, distance: 29.07
+camion-moto, distance: 45.62
+arbre-moto, distance: 33.10
+
+Mots de départ :
+voiture,561464
+bus,1715044
+Liste des mots :
+voiture, offset: 561464
+bus, offset: 1715044
+bleu, offset: 1242237
+vert, offset: 1272486
+camion, offset: 4406863
+arbre, offset: 2025981
+Distance entre les mots :
+voiture-bus,52.36
+voiture-bleu, distance: 57.95
+bus-bleu, distance: 59.44
+voiture-vert, distance: 60.52
+bus-vert, distance: 34.58
+bleu-vert, distance: 70.32
+voiture-camion, distance: 27.83
+bus-camion, distance: 28.11
+bleu-camion, distance: 27.85
+vert-camion, distance: 27.26
+voiture-arbre, distance: 71.68
+bus-arbre, distance: 72.79
+bleu-arbre, distance: 73.92
+vert-arbre, distance: 74.51
+camion-arbre, distance: 75.17

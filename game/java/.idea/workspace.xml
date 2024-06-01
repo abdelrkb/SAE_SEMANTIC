@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="fe484689-8680-4d4b-bac3-56d8b30b768d" name="Changes" comment="commit apres les modif du php">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/saeS4-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/saeS4-1.0-SNAPSHOT.jar" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ComposerSettings">
+    <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Ahmed-Sarboudine&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Ahmed-Sarboudine/saeS4java.git&quot;,
+    &quot;accountId&quot;: &quot;2c466957-e1a5-4475-9efa-ebd01d57c44b&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 8
+}</component>
+  <component name="ProjectId" id="2dHbHebE8jx9rLpIkDYPj6SjSd7" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Application.main.executor&quot;: &quot;Run&quot;,
+    &quot;Maven.saeS4 [compile].executor&quot;: &quot;Run&quot;,
+    &quot;Maven.saeS4 [package].executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/thamiz/IdeaProjects/saeS4&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="sae" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/java" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/main/java/sae" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Application.Main">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sae.Main" />
+      <module name="saeS4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sae.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="sae.main" />
+      <module name="saeS4" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="sae.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+        <item itemvalue="Application.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.17011.79" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.17011.79" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fe484689-8680-4d4b-bac3-56d8b30b768d" name="Changes" comment="" />
+      <created>1709667864425</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1709667864425</updated>
+      <workItem from="1709667865453" duration="1094000" />
+      <workItem from="1714568593287" duration="12810000" />
+      <workItem from="1714854130674" duration="4915000" />
+      <workItem from="1714925801480" duration="772000" />
+      <workItem from="1715157983335" duration="2508000" />
+      <workItem from="1715262415177" duration="312000" />
+      <workItem from="1715498964890" duration="7161000" />
+      <workItem from="1716235986147" duration="52000" />
+      <workItem from="1716358894512" duration="12479000" />
+      <workItem from="1716449099513" duration="5270000" />
+      <workItem from="1716480616648" duration="4203000" />
+      <workItem from="1716555893809" duration="1265000" />
+      <workItem from="1716619247889" duration="3963000" />
+      <workItem from="1716726793253" duration="11000" />
+      <workItem from="1716735366529" duration="624000" />
+      <workItem from="1716791297907" duration="4416000" />
+      <workItem from="1716904267692" duration="3047000" />
+      <workItem from="1717003726436" duration="599000" />
+      <workItem from="1717170410965" duration="599000" />
+      <workItem from="1717172471949" duration="1274000" />
+    </task>
+    <task id="LOCAL-00001" summary="1st commit">
+      <option name="closed" value="true" />
+      <created>1709668298418</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1709668298418</updated>
+    </task>
+    <task id="LOCAL-00002" summary="1st commit">
+      <option name="closed" value="true" />
+      <created>1709668359580</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1709668359580</updated>
+    </task>
+    <task id="LOCAL-00003" summary="commit du 1er main">
+      <option name="closed" value="true" />
+      <created>1714581202895</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1714581202895</updated>
+    </task>
+    <task id="LOCAL-00004" summary="commit du le 2nd">
+      <option name="closed" value="true" />
+      <created>1714582105684</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1714582105684</updated>
+    </task>
+    <task id="LOCAL-00005" summary="commit du le 3nd">
+      <option name="closed" value="true" />
+      <created>1714582306351</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1714582306351</updated>
+    </task>
+    <task id="LOCAL-00006" summary="commit du le 4nd">
+      <option name="closed" value="true" />
+      <created>1714583170630</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1714583170630</updated>
+    </task>
+    <task id="LOCAL-00007" summary="commit du le 6nd">
+      <option name="closed" value="true" />
+      <created>1714583317030</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1714583317030</updated>
+    </task>
+    <task id="LOCAL-00008" summary="commit avant test">
+      <option name="closed" value="true" />
+      <created>1716395838302</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1716395838302</updated>
+    </task>
+    <task id="LOCAL-00009" summary="commit du mardi 23 avec correction detecCycle">
+      <option name="closed" value="true" />
+      <created>1716487047854</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1716487047854</updated>
+    </task>
+    <task id="LOCAL-00010" summary="commit du mardi 23 avec correction detecCycle">
+      <option name="closed" value="true" />
+      <created>1716487065745</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1716487065745</updated>
+    </task>
+    <task id="LOCAL-00011" summary="commit avant les modif du php">
+      <option name="closed" value="true" />
+      <created>1716795230021</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1716795230021</updated>
+    </task>
+    <task id="LOCAL-00012" summary="commit apres les modif du php">
+      <option name="closed" value="true" />
+      <created>1716913977984</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1716913977984</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1st commit" />
+    <MESSAGE value="commit du 1er main" />
+    <MESSAGE value="commit du le 2nd" />
+    <MESSAGE value="commit du le 3nd" />
+    <MESSAGE value="commit du le 4nd" />
+    <MESSAGE value="commit du le 6nd" />
+    <MESSAGE value="commit avant test" />
+    <MESSAGE value="commit du mardi 23 avec correction detecCycle" />
+    <MESSAGE value="commit avant les modif du php" />
+    <MESSAGE value="commit apres les modif du php" />
+    <option name="LAST_COMMIT_MESSAGE" value="commit apres les modif du php" />
+  </component>
+</project>

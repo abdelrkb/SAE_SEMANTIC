@@ -1,0 +1,13 @@
+Score: 48.439998626708984
+Mots de départ :
+voiture
+bus
+Distance entre les mots :
+voiture_arbre, distance: 71.68
+bleu_arbre, distance: 89.92
+bus_bleu, distance: 48.44
+Mots bannis:
+vert
+camion
+arbre
+moto

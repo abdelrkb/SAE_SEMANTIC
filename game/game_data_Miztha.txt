@@ -1,0 +1,11 @@
+Mots de départ :
+gingembre,10664074
+curry,11350967
+Liste des mots :
+gingembre, offset: 10664074
+curry, offset: 11350967
+jambes, offset: 4292149
+Distance entre les mots :
+gingembre-curry, distance: 49.36
+gingembre-jambes, distance: 47.00
+curry-jambes, distance: 25.43

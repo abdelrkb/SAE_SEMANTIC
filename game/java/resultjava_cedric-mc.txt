@@ -1,4 +1,0 @@
-Score minimal: 52
-Dernier mot ajouté: false
-voiture-bus, 52.36
-voiture-vert, 53.52
