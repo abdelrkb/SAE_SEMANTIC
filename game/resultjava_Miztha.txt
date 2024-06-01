@@ -1,8 +1,0 @@
-Score: 49.36000061035156
-Mots de départ :
-gingembre
-curry
-Distance entre les mots :
-gingembre_curry, distance: 49.36
-Mots bannis:
-jambes
