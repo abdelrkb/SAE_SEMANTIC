@@ -1,4 +1,9 @@
 <?php
+//erreur
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 include("game_fonctions.php");
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
@@ -34,11 +39,10 @@ $_SESSION['paires'] = ajouterPaire($_SESSION['paires'], $_SESSION['words'][0], $
 
 // Création du fichier de résultat java le 'resultjava_pseudo.txt' avec les droits rw-rw-rw-
 $fichier_resultat = fopen("partie/resultjava_$_SESSION[pseudo].txt", 'w');
-// On écrit les 3 premières lignes du fichier
-fwrite($fichier_resultat, "Score minimal: " . $_SESSION['paires'][0]['nombre'] . "\n");
-fwrite($fichier_resultat, "Dernier mot ajouté: true\n");
-fwrite($fichier_resultat, $_SESSION['paires'][0]['mot1'] . "-" . $_SESSION['paires'][0]['mot2'] . ", " . $_SESSION['paires'][0]['nombre'] . "\n");
-fclose($fichier_resultat);
+// on va exécuté le java
+// Usage: java Main <pathToJavaFile> <pathToCFile>"
+$commandeJar = "../../../jdk-21.0.3/bin/java -cp java/target/classes sae.Main partie/resultjava_$_SESSION[pseudo].txt partie/game_data_" .$_SESSION["pseudo"]. ".txt 2>&1";
+exec($commandeJar);
 
 header('Location: game.php');
 ?>
