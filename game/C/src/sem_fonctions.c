@@ -94,11 +94,9 @@ double computeSemanticSimilarity(char *vectorFile, char *lexiconFile, char *word
         return EXIT_FAILURE;
     }
 
-    // Chargement du fichier lexique
-    StaticTree stImported = readLexFile(lexiconFile);
     // Trouver les offsets des mots dans le fichier lexique
-    long offset1 = findWord(&stImported, word1);
-    long offset2 = findWord(&stImported, word2);
+    long offset1 = findWord("C/arbre_lexicographique.lex", word1);
+    long offset2 = findWord("C/arbre_lexicographique.lex", word2);
 
     // Initialisation des vecteurs pour les deux mots
     float vec1[max_size], vec2[max_size];
