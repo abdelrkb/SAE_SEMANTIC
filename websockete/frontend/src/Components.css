@@ -1,0 +1,57 @@
+.ChatManager {
+    display: flex;
+    flex-direction: column;
+}
+
+.Error {
+    background-color: red;
+}
+
+.Disconnected {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.Connecting {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.WaitingRoomSelector {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.RoomWaiter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.ChatSession {
+    display: flex;
+    flex-direction: column;
+
+}
+
+.ChatMessagesDisplayer {
+    flex: 1;
+}
+
+.ChatMessageDisplayer {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+}
+
+.MessageSender {
+    display: flex;
+    flex-direction: row;
+}

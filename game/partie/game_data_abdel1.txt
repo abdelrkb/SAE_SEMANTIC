@@ -1,0 +1,20 @@
+Mots de départ :
+tige,8344863
+vallée,1991970
+Liste des mots :
+tige, offset: 8344863
+vallée, offset: 1991970
+soleils, offset: 20639181
+tigre, offset: 10365976
+tigres, offset: 22805887
+Distance entre les mots :
+tige-vallée, distance: 33.25
+tige-soleils, distance: 32.79
+vallée-soleils, distance: 31.21
+tige-tigre, distance: 64.68
+vallée-tigre, distance: 40.24
+soleils-tigre, distance: 38.23
+tige-tigres, distance: 62.17
+vallée-tigres, distance: 36.33
+soleils-tigres, distance: 40.97
+tigre-tigres, distance: 71.73
