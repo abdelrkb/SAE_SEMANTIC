@@ -41,39 +41,69 @@ export const RoomWaiter = (props: {roomName: string, startTimestamp: number, onL
     </div>
 }
 
-export const ChatMessageDisplayer = (props: {message: Message}) => {
-    const date = React.useMemo(() => new Date(props.message.timestamp).toLocaleTimeString(), [props.message.timestamp])
-    return <div className="ChatMessageDisplayer">
-        <div>{date}</div>
-        <div>{props.message.sender}</div>
-        <div style={{flex: 1}}>{props.message.content}</div>
-    </div>
-}
+export const ChatMessageDisplayer = (props: {message: Message, sendWordClicked: boolean}) => {
+    const date = React.useMemo(() => new Date(props.message.timestamp).toLocaleTimeString(), [props.message.timestamp]);
+    const messageClasses = ['ChatMessageDisplayer'];
+    console.log(props.sendWordClicked);
+    if (props.sendWordClicked) {
+        messageClasses.push('SpecialChatMessage');
+    }
 
-export const ChatMessagesDisplayer = (props: {messages: Message[]}) => {
-    return <ol className="ChatMessagesDisplayer">
-        {props.messages.map((x, i) => <li key={i}><ChatMessageDisplayer message={x} /></li>)}
-    </ol>
-}
+    return (
+        <div className={messageClasses.join(' ')}>
+            <div>{date}</div>
+            <div>{props.message.sender}</div>
+            <div style={{flex: 1}}>{props.message.content}</div>
+        </div>
+    );
+};
+
+export const ChatMessagesDisplayer = (props: {messages: Message[], sendWordClicked: boolean}) => {
+    return (
+        <ol className="ChatMessagesDisplayer">
+            {props.messages.map((x, i) => (
+                <li key={i}>
+                    <ChatMessageDisplayer message={x} sendWordClicked={props.sendWordClicked} />
+                </li>
+            ))}
+        </ol>
+    );
+};
+
 
 export const MessageSender = (props: {onMessageWritten: (content: string) => void}) => {
-    const [content, setContent] = React.useState("")
-    return <div className="MessageSender">
-        <input type="text" value={content} style={{flex: 1}} onChange={event => setContent(event.target.value)} />
-        <button onClick={() => {props.onMessageWritten(content); setContent('')}}>Send</button>
-    </div>
-}
+    const [content, setContent] = React.useState("");
+    const [sendWordClicked, setSendWordClicked] = React.useState(false);
 
-export const ChatSession = (props: {messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void, onClosing: () => void}) => {
-    return <div className="ChatSession">
-        <ChatMessagesDisplayer messages={props.messages} />
-        {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
-        <div>
-            <button onClick={() => props.onLeaving()} disabled={!props.active}>Leave the chat session</button>
-            <button onClick={() => props.onClosing()} disabled={props.active}>Close</button>
+    const handleSendWordClick = () => {
+        setSendWordClicked(true);
+        props.onMessageWritten(content);
+        setContent('');
+    };
+
+    return (
+        <div className="MessageSender">
+            <input type="text" value={content} style={{flex: 1}} onChange={event => setContent(event.target.value)} />
+            <button onClick={() => {props.onMessageWritten(content); setContent('')}}>Send</button>
+            <button onClick={handleSendWordClick}>SendWord </button>
         </div>
-    </div>
-}
+    );
+};
+
+
+export const ChatSession = (props: {messages: Message[], active: boolean, sendWordClicked: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void, onClosing: () => void}) => {
+    return (
+        <div className="ChatSession">
+            <ChatMessagesDisplayer messages={props.messages} sendWordClicked={props.sendWordClicked} />
+            {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
+            <div>
+                <button onClick={() => props.onLeaving()} disabled={!props.active}>Leave the chat session</button>
+                <button onClick={() => props.onClosing()} disabled={props.active}>Close</button>
+            </div>
+        </div>
+    );
+};
+
 
 interface DisconnectedState { disconnected: true }
 interface ConnectingState { connecting: true }
@@ -83,6 +113,7 @@ interface ChattingState { startTimestamp: number, messages: Message[], active: b
 type ChatState = DisconnectedState | ConnectingState | RoomSelectionState | WaitingState | ChattingState
 
 export const ChatManager = (props: {socketUrl: string}) => {
+    const [sendWordClicked, setSendWordClicked] = React.useState(false);
     const [chatState, setChatState] = React.useState<ChatState>({disconnected: true})
     const [connected, setConnected] = React.useState(false)
     const [socket, setSocket] = React.useState<WebSocket|null>(null)
@@ -250,7 +281,14 @@ export const ChatManager = (props: {socketUrl: string}) => {
         {'waitingRoomName' in chatState &&
             <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />}
         {'messages' in chatState && 
-            <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} />
+        <ChatSession
+        messages={chatState.messages}
+        active={chatState.active}
+        sendWordClicked={sendWordClicked} // Ajoutez cette ligne
+        onMessageWritten={sendChatMessage}
+        onLeaving={leaveChatSession}
+        onClosing={closeChatSession}
+    />
         }
     </div>
 }

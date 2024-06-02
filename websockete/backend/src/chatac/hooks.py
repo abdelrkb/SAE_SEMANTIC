@@ -71,8 +71,9 @@ class ChatHooks(object):
 
 class DefaultChatHooks(ChatHooks):
     DEFAULT_WELCOME_MESSAGE = "Welcome everybody!"
-    DEFAULT_DURATION = 60
-    DEFAULT_ROOMS = {"default": {"attendee_number": 2, "duration": 60, "welcome_message": "Welcome everybody!"}}
+    DEFAULT_DURATION = 600
+    DEFAULT_ROOMS = {"default": {"attendee_number": 2, "duration": 600, "welcome_message": "Bienvenue dans votre chat de partie!"}}
+    DEFAULT_ROOMS1 = {"default": {"attendee_number": 2, "duration": 600, "welcome_message": "Bienvenue dans votre chat de partie!"}}
 
     class AttendeeInfo(object):
         def __init__(self, identity):
@@ -107,18 +108,25 @@ class DefaultChatHooks(ChatHooks):
         }
 
     async def on_chat_message(self, chat_session_id: int, sender_id: int, content: Any) -> Dict[int, Any]:
-        # update the stats
-
+        # Mettre à jour les statistiques de l'expéditeur
         attendee = self._attendees[chat_session_id][sender_id]
         attendee.message_number += 1
         attendee.char_number += len(str(content))
 
-        i = 0
+        # Initialiser un dictionnaire pour stocker les messages à envoyer à chaque destinataire
         result = {}
+
+        # Vérifier le type de message et le traiter en conséquence
+        is_special = isinstance(content, dict) and content.get("type") == "special"
+
+        # Ajouter le message modifié à la liste des messages à envoyer à chaque destinataire
         for (id, a) in self._attendees[chat_session_id].items():
             if not a.has_left:
                 result[id] = content
-        return result
+
+        # Retourner le dictionnaire contenant les messages à envoyer à chaque destinataire
+        return result, is_special
+
 
     async def on_attendee_leave(self, chat_session_id: int, attendee_id: int):
         self._attendees[chat_session_id][attendee_id].has_left = True

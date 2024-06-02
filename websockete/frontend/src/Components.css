@@ -1,57 +1,50 @@
-.ChatManager {
+/* App.css */
+.ChatContainer {
     display: flex;
-    flex-direction: column;
-}
-
-.Error {
-    background-color: red;
-}
-
-.Disconnected {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.Connecting {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.WaitingRoomSelector {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.RoomWaiter {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-}
-
-.ChatSession {
-    display: flex;
-    flex-direction: column;
-
-}
-
-.ChatMessagesDisplayer {
+    justify-content: space-between;
+  }
+  
+  .ChatManager {
     flex: 1;
+    margin: 10px;
+  }
+  
+  .Error {
+    background-color: red;
+  }
+
+  .SpecialChatMessage {
+    color: red;
 }
 
-.ChatMessageDisplayer {
+  .Disconnected,
+  .Connecting,
+  .WaitingRoomSelector,
+  .RoomWaiter {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .ChatSession {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .ChatMessagesDisplayer {
+    flex: 1;
+  }
+  
+  .ChatMessageDisplayer {
     display: flex;
     flex-direction: row;
     column-gap: 10px;
-}
-
-.MessageSender {
+  }
+  
+  
+  .MessageSender {
     display: flex;
     flex-direction: row;
-}
+  }
+  
