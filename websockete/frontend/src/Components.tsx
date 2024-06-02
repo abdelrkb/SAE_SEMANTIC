@@ -85,7 +85,7 @@ export const MessageSender = (props: {onMessageWritten: (content: string) => voi
         <div className="MessageSender">
             <input type="text" value={content} style={{flex: 1}} onChange={event => setContent(event.target.value)} />
             <button onClick={() => {props.onMessageWritten(content); setContent('')}}>Send</button>
-            <button onClick={handleSendWordClick}>SendWord </button>
+            <button onClick={handleSendWordClick}> SendWord </button>
         </div>
     );
 };
