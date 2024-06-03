@@ -81,7 +81,6 @@ $top3Request->closeCursor();
                         <a id="historique" href="historique.php" class="btn btn-primary g-col-6 text-nowrap">Voir mon historique&emsp;<i class="fa-solid fa-clock-rotate-left"></i></a>
                         <a id="btn-email" href="change_email.php" class="btn btn-warning text-nowrap">Changer l'email&emsp;<i class="fa-solid fa-envelope"></i></a>
                         <a id="btn-mdp" href="change_password.php" class="btn btn-warning text-nowrap">Changer le mot de passe&emsp;<i class="fa-solid fa-key"></i></a>
-                        <a id="btn-photo" href="change_profil-photo.php" class="btn btn-warning text-nowrap disabled">Changer la photo de profil&emsp;<i class="fa-regular fa-pen-to-square"></i></a>
                         <button id="disconnect-btn" class="btn btn-danger g-col-6 text-nowrap">Se déconnecter&emsp;<i class="fa-solid fa-right-from-bracket"></i></button>
                     </div>
                 </div>
@@ -145,12 +144,15 @@ $top3Request->closeCursor();
                     <h2 class="title-section">Mes Informations</h2>
                     <div>
                         <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Email : <?php echo $profilResult->email;?>">
+                            Pseudo : <?php echo $pseudo;?>
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Email : <?php echo $profilResult->email;?>">
                             Email : <?php echo $profilResult->email;?>
                         </button>
                         <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Année de Naissance : <?php echo $profilResult->annee_naissance;?>">
                             Année de Naissance : <?php echo $profilResult->annee_naissance;?>
                         </button>
-                        <button id="tempsEcoule" type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Dernière Connexion : <?php echo makeDateTime($profilResult->lastConnexion);?>">
+                        <button id="tempsEcoule" type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" title="Connecté depuis : <?php echo makeDateTime($profilResult->lastConnexion);?>">
                         </button>
                     </div>
                 </div>
