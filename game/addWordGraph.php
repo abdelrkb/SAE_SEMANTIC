@@ -37,10 +37,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Java : trier les paires
     $commandeJar = "../../../jdk-21.0.3/bin/java -cp java/target/classes sae.Main partie/resultjava_$_SESSION[pseudo].txt partie/game_data_" .$_SESSION["pseudo"]. ".txt 2>&1";
     exec($commandeJar);
-    if (!ifLastWordAdd()) {
+    if (isWordBanned($newWord)) {
         header("Location: game.php?erreur=3");
         exit();
     }
+
 
     $_SESSION['paires'] = [];
     $cheminFichier = "partie/resultjava_$pseudo.txt";
