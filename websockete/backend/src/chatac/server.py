@@ -394,13 +394,19 @@ class ChatServer(object):
             if os.path.exists(output_json_path):
                 with open(output_json_path, 'r') as json_file:
                     json_content = json.load(json_file)
-                await client.send_message('python_execution_result', output=json.dumps(json_content))
+                # Diffuser à tous les clients connectés
+                await self.broadcast_message('python_execution_result', json_content)
             else:
                 await client.send_message('python_execution_result', output="Error: JSON file not found")
         except subprocess.TimeoutExpired:
             await client.send_message('python_execution_result', output="Error: Command timed out")
         except Exception as e:
             await client.send_message('python_execution_result', output=f"Error: {str(e)}")
+
+    async def broadcast_message(self, kind: str, content: Any):
+        message = {'kind': kind, 'output': content}
+        for client in self._connected_clients.values():
+            await client.send_message(kind, output=content)
 
     
     async def _background_tasks(self, app):

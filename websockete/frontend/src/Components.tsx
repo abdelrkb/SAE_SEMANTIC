@@ -76,6 +76,7 @@ export const MessageSender = (props: {onMessageWritten: (content: string) => voi
     </div>
 }
 
+
 export const ChatSession = (props: {messages: Message[], active: boolean, onMessageWritten: (content: string) => void, onLeaving: () => void, onClosing: () => void}) => {
     return <div className="ChatSession">
         <ChatMessagesDisplayer messages={props.messages} />
