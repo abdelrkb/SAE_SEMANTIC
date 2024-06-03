@@ -50,7 +50,7 @@ Note that this server is very raw:
 it is up to you to adapt it for you real needs with custom hooks! Good luck!
 """
 
-import asyncio, logging, os, sys, json, time
+import asyncio, logging, os, sys, json, time, subprocess
 from aiohttp import web, WSMsgType, WSCloseCode, ClientConnectionError
 from typing import Dict, Any, List
 from .hooks import ChatHooks
@@ -292,7 +292,13 @@ class ChatServer(object):
                     elif msg_kind is None:
                         await client.send_message('message_kind_absent')
                     else:
-                        if msg_kind == 'join_waiting_room':
+                        if msg_kind == 'execute_python':
+                            command = decoded_msg.get('command', '')
+                            if command:
+                                await self.execute_python_script(client, command)
+                            else:
+                                await client.send_message('command_invalid')
+                        elif msg_kind == 'join_waiting_room':
                             waiting_room_name = str(decoded_msg.get('waiting_room_name', '')).strip()
                             token = str(decoded_msg.get('token', '')).strip()
                             if not waiting_room_name or waiting_room_name not in self._waiting_rooms:
@@ -300,7 +306,7 @@ class ChatServer(object):
                             elif not token:
                                 await client.send_message('token_empty')
                             elif client.state not in ('connected', 'waiting'):
-                                 await client.send_message('state_invalid', state=client.state)
+                                await client.send_message('state_invalid', state=client.state)
                             else:
                                 client_identity = await self.hooks.on_client_connection(waiting_room_name, token)
                                 if not isinstance(client_identity, dict):
@@ -323,7 +329,7 @@ class ChatServer(object):
                                 await wr.cancel_client_id(client.id)
                                 client.state = 'connected'
                                 await client.send_message('waiting_room_left', 
-                                    waiting_room_name = wr.name)
+                                    waiting_room_name=wr.name)
                             else:
                                 await client.send_message('state_invalid', state=client.state)
                         
@@ -348,14 +354,14 @@ class ChatServer(object):
                         else:
                             await client.send_message('message_kind_not_understood')
 
-                elif msg.type == WSMsgType.error:
+                elif msg.type == WSMsgType.ERROR:
                     logger.info(f"The websocket of {client} has been closed")
                 else:
                     await client.send_message('message_invalid')
         except asyncio.CancelledError:
             await client.send_message("server_shutdown")
         except ClientConnectionError:
-            logger.info(f"Connection error of {client}")
+            logger.info(f"Connection error for client {client}")
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -364,7 +370,6 @@ class ChatServer(object):
             if client.waiting_room is not None:
                 await client.waiting_room.cancel_client_id(client.id)
             elif client.chat_session is not None:
-                # this code is executed only if the client has not leaved properly the chat session
                 await client.chat_session.put_in_leave_queue(client)
             try:
                 await client.websocket.close()
@@ -372,6 +377,31 @@ class ChatServer(object):
                 pass
             self._connected_clients.pop(client.id)
             logger.info(f"The client {client} has leaved")
+
+
+    async def execute_python_script(self, client, command):
+        try:
+            # Construire le chemin absolu du script
+            script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/test.py'))
+            # Chemin du fichier JSON généré
+            output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../output.json'))
+            
+            # Exécuter le script avec le message comme argument
+            result = subprocess.run(['python3', script_path, command], capture_output=True, text=True, timeout=10)
+            output = result.stdout + result.stderr
+            
+            # Lire le fichier JSON généré
+            if os.path.exists(output_json_path):
+                with open(output_json_path, 'r') as json_file:
+                    json_content = json.load(json_file)
+                await client.send_message('python_execution_result', output=json.dumps(json_content))
+            else:
+                await client.send_message('python_execution_result', output="Error: JSON file not found")
+        except subprocess.TimeoutExpired:
+            await client.send_message('python_execution_result', output="Error: Command timed out")
+        except Exception as e:
+            await client.send_message('python_execution_result', output=f"Error: {str(e)}")
+
     
     async def _background_tasks(self, app):
         # inspired from https://docs.aiohttp.org/en/stable/web_advanced.html#background-tasks
