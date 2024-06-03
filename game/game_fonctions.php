@@ -62,21 +62,41 @@ function startGame()
     fclose($fichier_resultat);
 }
 
-function ifLastWordAdd() {
+function isWordBanned($word) {
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
+
     $fichier_resultat = fopen("partie/resultjava_$_SESSION[pseudo].txt", 'r');
-    // 'Dernier mot ajouté: true' ou 'Dernier mot ajouté: false'
-    // On itère sur les lignes du fichier jusqu'à trouver la ligne contenant 'Dernier mot ajouté'
+    if (!$fichier_resultat) {
+        return false; // Ou vous pouvez gérer l'erreur comme vous le souhaitez
+    }
+
+    $isBanned = false;
+    $readingBannedWords = false;
+
     while (($ligne = fgets($fichier_resultat)) !== false) {
-        if (strpos($ligne, "Dernier mot ajouté") !== false) {
-            // On convertit la ligne en booléen
-            $dernierMotAjoute = filter_var(trim(str_replace("Dernier mot ajouté: ", "", $ligne)), FILTER_VALIDATE_BOOLEAN);
+        $ligne = trim($ligne);
+
+        if (strpos($ligne, "Mots bannis:") !== false) {
+            $readingBannedWords = true;
+            continue;
+        }
+
+        if ($readingBannedWords) {
+            if (empty($ligne)) {
+                break; // On sort de la boucle si on rencontre une ligne vide après "Mots bannis:"
+            }
+
+            if ($ligne === $word) {
+                $isBanned = true;
+                break;
+            }
         }
     }
+
     fclose($fichier_resultat);
-    return $dernierMotAjoute;
+    return $isBanned;
 }
 
 function ajouterPaire($tableau, $mot1, $mot2)
