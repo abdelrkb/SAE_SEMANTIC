@@ -99,6 +99,7 @@ function isWordBanned($word) {
     return $isBanned;
 }
 
+
 function ajouterPaire($tableau, $mot1, $mot2)
 { // Ajoute une paire de mots au tableau
     $distance = null;
@@ -130,7 +131,8 @@ function calculateScore()
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
-    return $_SESSION['scores'];
+    $score = round($_SESSION['scores'], 2);
+    return $score;
 }
 
 function createDataForGraph($paires) {

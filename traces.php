@@ -1,9 +1,10 @@
 <?php
 session_start();
-if (!isset($_SESSION['pseudo'])) {
+if (!isset($_SESSION['pseudo']) ) {
     header('Location: ./');
     exit;
 }
+$isAdmin = $_SESSION['admin'];
 $pseudo = $_SESSION['pseudo'];
 include("includes/fonctions.php");
 include("conf.bkp.php");
@@ -42,53 +43,69 @@ $tracesOnlyMeRequest->closeCursor();
 <body class="black">
 <a class="btn btn-light" href="home.php">Retour&emsp;<i class="fa-solid fa-left-long"></i></a>
 <main class="glassmorphism">
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <?php
+    
+    if ($isAdmin) {
+        echo '<ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#everyone" type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Tout</button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#only-me" type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">Profil</button>
         </li>
-    </ul>
+    </ul>';
+    
+    }
+    ?>
+    
     <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="everyone" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-            <h1 class="title">500 Dernières Traces de Tous les Utilisateurs</h1>
-            <!-- Nombre de traces -->
-            <div class="text-end">
-                <p class="text-white">Nombre de traces : <?php echo count($tracesEveryoneResult); ?></p>
-            </div>
-            <div class="table-responsive">
-                <table class="table table-hover table-bordered">
-                    <thead>
-                    <tr class="table-dark">
-                        <th scope="col">#</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Heure</th>
-                        <th scope="col">IP</th>
-                        <th scope="col">ID Utilisateur</th>
-                        <th scope="col">Action réalisée</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $i = 1;
-                    foreach ($tracesEveryoneResult as $trace) {
-                        echo "<tr class='" . addStyleTableRow($trace->action) . "'>";
-                        echo "<td>$i</td>";
-                        echo "<td>" . makeDate($trace->timestamp) . "</td>";
-                        echo "<td>" . makeHour($trace->timestamp) . "</td>";
-                        echo "<td>$trace->ip_adress</td>";
-                        echo "<td>$trace->utilisateur_id</td>";
-                        echo "<td>$trace->action</td>";
-                        echo "</tr>";
-                        $i++;
-                    }
-                    ?>
-                    </tbody>
-                </table>
-            </div>
+    
+    <?php
+    $active = "";
+    
+    if ($isAdmin) {
+        echo '<div class="tab-pane fade show active" id="everyone" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        <h1 class="title">500 Dernières Traces de Tous les Utilisateurs</h1>
+        <!-- Nombre de traces -->
+        <div class="text-end">
+            <p class="text-white">Nombre de traces : <?php echo count($tracesEveryoneResult); ?></p>
         </div>
-        <div class="tab-pane fade" id="only-me" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered">
+                <thead>
+                <tr class="table-dark">
+                    <th scope="col">#</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Heure</th>
+                    <th scope="col">IP</th>
+                    <th scope="col">ID Utilisateur</th>
+                    <th scope="col">Action réalisée</th>
+                </tr>
+                </thead>
+                <tbody>';
+                $i = 1;
+                foreach ($tracesEveryoneResult as $trace) {
+                    echo "<tr class='" . addStyleTableRow($trace->action) . "'>";
+                    echo "<td>$i</td>";
+                    echo "<td>" . makeDate($trace->timestamp) . "</td>";
+                    echo "<td>" . makeHour($trace->timestamp) . "</td>";
+                    echo "<td>$trace->ip_adress</td>";
+                    echo "<td>$trace->utilisateur_id</td>";
+                    echo "<td>$trace->action</td>";
+                    echo "</tr>";
+                    $i++;
+                }
+                
+        echo '</tbody>
+            </table>
+        </div>  
+    </div>';
+
+    $active = "show active";
+    
+    }
+    ?>
+        <div class="tab-pane fade <?php $active ?>" id="only-me" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             <h1 class="title">500 Dernières Traces de <?php echo $pseudo; ?></h1>
             <!-- Nombre de traces -->
             <div class="text-end">

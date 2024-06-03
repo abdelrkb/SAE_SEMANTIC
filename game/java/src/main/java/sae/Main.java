@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-// /saeS4/target/classes/sae/main/
 public class Main {
-    public static void main(String[] args) {
+    public static List<Edge> main(String[] args) {
         if (args.length < 2) {
             System.err.println("Usage: java Main <pathToJavaFile> <pathToCFile>");
             System.exit(1);
@@ -51,6 +50,8 @@ public class Main {
 
                 LoadingFromJava.DataWriter.writeJavaFile(pathToJavaFile, score, startWordC, endWordC, edgesC, new ArrayList<>());
                 System.out.println("Fichier Java réécrit avec les nouvelles données initiales.");
+
+                return edgesC;
             } else {
                 double javaScore = loadedJavaData.getScore();
                 System.out.println("Fichier Java javaScore: " + javaScore);
@@ -81,8 +82,10 @@ public class Main {
                     System.out.println("Nouveau mot banni ajouté: " + lastWordFromC);
                 }
 
-                LoadingFromJava.DataWriter.writeJavaFile(pathToJavaFile, newScore, javaTree.getStartWord(), javaTree.getEndWord(), optimalPath, javaBannedWords);
+                LoadingFromJava.DataWriter.writeJavaFile(pathToJavaFile, newScore, javaTree.getStartWord(), javaTree.getEndWord(), javaTree.getEdges(), javaBannedWords);
                 System.out.println("Fichier Java réécrit avec les données mises à jour.");
+
+                return optimalPath;
             }
         } catch (IOException e) {
             System.err.println("Error processing files: " + e.getMessage());
@@ -90,5 +93,6 @@ public class Main {
         }
 
         System.out.println("Fin du programme.");
+        return null;
     }
 }

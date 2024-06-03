@@ -1,19 +1,37 @@
-.regles p, .regles h2, .regles h3 {
-    color: white;
+.regles h2 {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-h2 {
-    font-size: 24px; /* Taille de la police pour les h2 */
-    color: #FFFFFF; /* Couleur blanche, à ajuster selon votre design */
-    margin-bottom: 20px; /* Espace en dessous des h2 */
-    padding-bottom: 10px; /* Espace intérieur en dessous des h2 */
-    border-bottom: 2px solid #FFFFFF; /* Ligne de séparation en dessous des h2 */
-    text-transform: uppercase; /* Optionnel: transforme le texte en majuscules */
+.regles .rule {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-h3 {
-    font-size: 18px; /* Taille de la police pour les h3, plus petite que h2 */
-    color: #CCCCCC; /* Couleur grise, pour les distinguer des h2 */
-    margin-top: 20px; /* Espace au-dessus des h3 */
-    margin-bottom: 10px; /* Espace en dessous des h3 */
+.regles h2 {
+    font-size: 28px;
+    color: #fff;
+
+}
+
+.regles h3 {
+    font-size: 22px;
+    color: #fff;
+
+}
+
+.regles p {
+    font-size: 18px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.icon {
+    margin-right: 10px;
+    color: #fff;
 }

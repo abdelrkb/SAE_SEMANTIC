@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["executeButton"])) {
     exec("echo 1", $output, $return_var);
     echo $output[0];
 }
+include_once('admin.php');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -33,14 +34,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["executeButton"])) {
         </figure>
         <main class="position-absolute top-50 start-50 translate-middle glassmorphism">
             <h1 class="title">Semantic Analogy Explorer</h1>
-            <?php echo "<h2 class='subtitle'>Bienvenue, joueur $pseudo</h2>"; ?>
+            <?php echo "<h2 class='subtitle'>Bienvenue, $pseudo</h2>"; ?>
             <form method="post" action="game/start_game.php">
-                <h3 class="subtitle2"><i class="fa-solid fa-gamepad"></i>&emsp;Choisissez un mode de jeu&emsp;<i class="fa-solid fa-dice"></i></h3>
+                <h2 class="subtitle2"><i class="fa-solid fa-gamepad"></i>&emsp;Choisissez un mode de jeu&emsp;<i class="fa-solid fa-dice"></i></h2>
                 <button id="executeButton" class="btn btn-primary btn-lg" type="submit">Solo&emsp;<i class="fa-solid fa-user"></i></button>
                 <button id="executeButtonMulti" class="btn btn-primary btn-lg" type="reset" onclick="window.location.href='http://localhost:3000';">Multijoueur&emsp;<i class="fa-solid fa-users"></i></button>
             </form>
         </main>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
                 <script src="js/websocket.js"></script>
+        <script>
+            function showToast() {
+            var toast = document.getElementById("adminToast");
+            toast.className = "toast show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+        </script>
     </body>
 </html>

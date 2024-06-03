@@ -46,7 +46,7 @@ form {
     transform: translate(-50%, -50%);
 }
 
-button#executeButton {
+button#executeButton, button#executeButtonMulti {
     margin-top: 1.5rem;
     background: #fff;
     color: #000;
@@ -58,7 +58,7 @@ button#executeButton {
     transition: 0.3s ease;
 }
 
-button#executeButton:hover {
+button#executeButton:hover, button#executeButtonMulti:hover {
     color: #fff;
     border-color: #fff;
     background: rgba(255, 255, 255, 0.15);
