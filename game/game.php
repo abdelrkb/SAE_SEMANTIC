@@ -115,12 +115,24 @@ $scoreRequest->closeCursor();
                 <a href="#" class="btn btn-primary" id="endGameButton">Finir la partie</a>
             </div>
         </div>
-            <div class="div3">
+        <div class="div3">
             <p>Score actuel : <?php echo calculateScore(); ?></p>
             <p>Nombre de mots : <?php echo count($words); ?></p>
             <p>Dernier mot : <?php if (count($_SESSION['words']) > 2) echo ucfirst($_SESSION['words'][count($_SESSION['words']) - 1]); else echo "Aucun mot entré"; ?>
             </p>
             <p>Nombre de mots restants : <?php echo 7 - count($words) ?></p>
+        </div>
+        <div class="div6">
+            <h3>Mots de la partie :</h3>
+            <?php
+            foreach ($_SESSION['words'] as $word) {
+                $class = "";
+                if (isWordBanned($word)) {
+                    $class = "class='banned'";
+                }
+                echo "<p $class>".ucfirst($word)."</p>";
+            }
+            ?>
         </div>
         <div class="modal fade" id="endGameModal" tabindex="-1">
             <div class="modal-dialog modal-dialog-centered">
@@ -134,7 +146,7 @@ $scoreRequest->closeCursor();
                         <p>Votre meilleur score est de <?php echo $scoreResult->maxS; ?> point(s).</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" id="closeModalButton" data-bs-dismiss="modal">Fermer</button>
+                        <button type="button" class="btn btn-secondary" id="closeModalButton" data-bs-dismiss="modal">Retourner à l'accueil</button>
                     </div>
                 </div>
             </div>
@@ -143,9 +155,21 @@ $scoreRequest->closeCursor();
     <div class="div5">
         <h1 class="title"><?php if ($erreur != 0) echo "Erreur : " . $messagesErreur[$erreur]; ?></h1>
     </div>
+    <?php
+    if ($erreur != 0) {
+        echo "<div id='adminToast' class='toast'>".$messagesErreur[$erreur]."</div>";
+    echo '<script>document.addEventListener("DOMContentLoaded", function() { showToast(); });</script>';
+    }
+    
+    ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    function showToast() {
+        var toast = document.getElementById("adminToast");
+        toast.className = "toast show";
+        setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+    }
     // Fonction pour charger les données depuis PHP
     function loadData() {
         // Charger les données depuis le fichier PHP
@@ -253,6 +277,11 @@ $scoreRequest->closeCursor();
             // Affichez le modal lorsque le bouton "Finir la partie" est cliqué
             endGameModal.show();
         });
+
+        var words = <?php echo json_encode($words); ?>;
+        if (words.length >= 7) {
+            endGameModal.show();
+        }
 
         // Récupérez le bouton "Fermer" du modal par son ID
         var closeModalButton = document.getElementById("closeModalButton");

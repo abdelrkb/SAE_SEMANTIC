@@ -131,7 +131,8 @@ function calculateScore()
     if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
-    return $_SESSION['scores'];
+    $score = round($_SESSION['scores'], 2);
+    return $score;
 }
 
 function createDataForGraph($paires) {

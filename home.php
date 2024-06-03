@@ -10,6 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["executeButton"])) {
     exec("echo 1", $output, $return_var);
     echo $output[0];
 }
+include_once('admin.php');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -42,5 +43,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["executeButton"])) {
         </main>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
                 <script src="js/websocket.js"></script>
+        <script>
+            function showToast() {
+            var toast = document.getElementById("adminToast");
+            toast.className = "toast show";
+            setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
+        }
+        </script>
     </body>
 </html>

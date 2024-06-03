@@ -58,6 +58,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // Journalisation
                 include '../includes/fonctions.php';
                 trace($num_user, 'Connexion au Site', $cnx);
+
+                // Admin 
+                $stmt = $cnx->prepare('SELECT admin FROM SAE_USERS WHERE num_user = :id');
+                $stmt->bindParam(':id', $_SESSION['num_user'], PDO::PARAM_INT);
+                $stmt->execute();
+
+                $isAdmin = $stmt->fetchColumn();
+                $_SESSION['admin'] = $isAdmin;
                 
                 header('Location: ../home.php');
                 exit;
