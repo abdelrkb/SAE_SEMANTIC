@@ -251,9 +251,22 @@ public class Tree {
      */
     public Tree buildNewTree(double score, List<Word> bannedWords, List<Edge> edgesOfC) {
         System.out.println("le tree (print dans la fonction bnt avant traitement) : "+ this);
+
+        // Supprimer l'arête contenant à la fois le startWord et le endWord, et réinitialiser le score si une telle arête est trouvée
+        boolean isStartEndEdgeRemoved = edges.removeIf(edge ->
+                (edge.getWord1().equals(startWord) && edge.getWord2().equals(endWord) ||
+                        edge.getWord2().equals(startWord) && edge.getWord1().equals(endWord))
+        );
+
+        if (isStartEndEdgeRemoved) {
+            score = 0;  // Réinitialiser le score si l'arête contenant startWord et endWord a été supprimée
+            System.out.println("Arête contenant startWord et endWord supprimée, score réinitialisé à 0.");
+        }
+        double finalScore = score;
+
         // Filtrer les arêtes selon les critères spécifiés
         List<Edge> filteredEdges = edgesOfC.stream()
-                .filter(edge -> edge.getSimilarity() >= score) // Supprimer les arêtes sous le score
+                .filter(edge -> edge.getSimilarity() >= finalScore) // Supprimer les arêtes sous le score
                 .filter(edge -> !bannedWords.contains(edge.getWord1()) && !bannedWords.contains(edge.getWord2())) // Supprimer les arêtes avec des mots bannis
                 .filter(edge -> !this.contains(edge)) // Supprimer les arêtes déjà présentes dans l'arbre
                 .collect(Collectors.toList());
@@ -276,7 +289,6 @@ public class Tree {
         System.out.println("le tree (print dans la fonction bnt) : "+ this);
         return this;
     }
-
 }
 
 

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="saeS4:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="fe484689-8680-4d4b-bac3-56d8b30b768d" name="Changes" comment="commit apres les modif du php">
+      <change afterPath="$PROJECT_DIR$/.idea/artifacts/saeS4_jar.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sae/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sae/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sae/Tree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sae/Tree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sae/Tree.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/sae/Tree.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/saeS4-1.0-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/target/saeS4-1.0-SNAPSHOT.jar" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -55,6 +64,7 @@
     &quot;Maven.saeS4 [package].executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
     &quot;last_opened_file_path&quot;: &quot;/home/thamiz/IdeaProjects/saeS4&quot;,
@@ -63,6 +73,9 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Artifacts&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -146,7 +159,7 @@
       <workItem from="1716904267692" duration="3047000" />
       <workItem from="1717003726436" duration="599000" />
       <workItem from="1717170410965" duration="599000" />
-      <workItem from="1717172471949" duration="1274000" />
+      <workItem from="1717172471949" duration="15155000" />
     </task>
     <task id="LOCAL-00001" summary="1st commit">
       <option name="closed" value="true" />

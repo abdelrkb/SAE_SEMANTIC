@@ -99,6 +99,7 @@ function isWordBanned($word) {
     return $isBanned;
 }
 
+
 function ajouterPaire($tableau, $mot1, $mot2)
 { // Ajoute une paire de mots au tableau
     $distance = null;
