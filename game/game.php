@@ -23,6 +23,7 @@ $messagesErreur = [
 // Si un message d’erreur est passé dans l'URL, sinon message vide erreur = 0
 $erreur = $_GET['erreur'] ?? 0;
 
+
 // Utilisation d’un tableau associatif pour stocker les relations entre les mots
 $relations = [];
 
