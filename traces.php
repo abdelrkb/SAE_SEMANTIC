@@ -105,12 +105,12 @@ $tracesOnlyMeRequest->closeCursor();
             </table>
         </div>  
     </div>';
-
-    $active = "show active";
     
+    } else {
+        $active = "show active";
     }
     ?>
-        <div class="tab-pane fade <?php $active ?>" id="only-me" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div class="tab-pane fade <?php echo $active ?>" id="only-me" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             <h1 class="title">500 Dernières Traces de <?php echo $pseudo; ?></h1>
             <!-- Nombre de traces -->
             <div class="text-end">
