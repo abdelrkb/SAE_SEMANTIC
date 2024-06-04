@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     Bonjour $_SESSION[pseudo],<br>
     Votre adresse e-mail a été modifiée. Si vous n'êtes pas à l'origine de cette modification, veuillez contacter l'administrateur du site.<br>
     Cordialement,<br>
-    L'équipe de Semantic Analogy Explorer.";
+    L'équipe de Wacky Monkey's Words.";
     $mail->CharSet = 'UTF-8';
 
     $mail->send();
@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     Bonjour $_SESSION[pseudo],<br>
     Votre adresse e-mail a été modifiée. Si vous n'êtes pas à l'origine de cette modification, veuillez contacter l'administrateur du site.<br>
     Cordialement,<br>
-    L'équipe de Semantic Analogy Explorer.";
+    L'équipe de Wacky Monkey's Words.";
     $mail->CharSet = 'UTF-8';
 
     $mail->send();

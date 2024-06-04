@@ -1,27 +1,50 @@
-.regles h2 {
-    margin-top: 20px;
-    padding: 10px;
-    border-radius: 5px;
-    background: rgba(255, 255, 255, 0.1);
+body.black {
+    background-color: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
 }
 
-.regles .rule {
-    margin-top: 20px;
+/* Style pour le conteneur principal */
+main.glassmorphism {
+    margin: auto;
+    max-width: 1200px;
+    height: auto;
+    border-radius: 8px;
+    padding: 1.875rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Ajustements pour les écrans de taille moyenne */
+@media (min-width: 768px) {
+    main.glassmorphism {
+        padding: 2.5rem;
+    }
+}
+
+/* Style pour les titres et sous-titres */
+.regles h2,
+.regles h3 {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
     padding: 10px;
     border-radius: 5px;
-    background: rgba(255, 255, 255, 0.1);
 }
 
 .regles h2 {
     font-size: 28px;
-    color: #fff;
-
+    margin-top: 20px;
 }
 
 .regles h3 {
     font-size: 22px;
-    color: #fff;
-
+    margin-top: 15px;
 }
 
 .regles p {
@@ -34,4 +57,32 @@
 .icon {
     margin-right: 10px;
     color: #fff;
+}
+
+/* Ajustements spécifiques pour les petits écrans */
+@media (max-width: 576px) {
+    main.glassmorphism {
+        width: 10vw;
+        padding: 1rem;
+    }
+
+    .regles h2 {
+        font-size: 24px;
+        padding: 8px;
+    }
+
+    .regles h3 {
+        font-size: 20px;
+        padding: 8px;
+    }
+
+    .regles p {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .btn-light {
+        font-size: 1rem;
+        padding: 0.5rem 1rem;
+    }
 }

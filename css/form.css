@@ -25,6 +25,10 @@ h2.title {
     margin: 0.938rem 0;
 }
 
+p {
+    color: #fff;
+}
+
 .input-field label {
     position: absolute;
     top: 50%;
@@ -102,9 +106,12 @@ button#formButton:hover {
     color: #fff;
 }
 
-/* Responsive */
-@media screen and (max-width: 600px) {
+
+@media (max-width: 576px) {
     .glassmorphism {
-        width: 90%;
+        width: 95vw;
+        height: auto;
+        max-height: 90vh;
+        padding: 1rem;
     }
 }

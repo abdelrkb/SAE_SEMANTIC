@@ -1,43 +1,37 @@
-html {
-    padding: 20px;
-    font-family: Arial, sans-serif; /* Police plus moderne */
-}
 
-body {
-    margin: 0;
-    padding: 0;
-    background-color: #121212; /* Fond noir foncé */
-    color: #fff; /* Texte en blanc pour contraster avec le fond noir */
+
+/* Style pour le conteneur principal */
+main.glassmorphism {
+    width: 90vw;
+    max-width: 1200px;
+    height: auto;
+    border-radius: 8px;
+    padding: 1.875rem;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(9px);
+    -webkit-backdrop-filter: blur(9px);
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centre tout le contenu */
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto; /* Centre horizontalement */
 }
 
-.div4 {
-    grid-area: 1 / 3 / 2 / 4;
-    display: flex; /* Utilisez flexbox pour le centrage */
-    flex-direction: column;
-    align-items: center; /* Centre verticalement */
-    font-size: 2.5rem; /* Taille du titre */
-    margin: 20px 0; /* Espacement autour du titre */
+/* Titre principal */
+.title {
+    font-size: 2.5rem;
+    margin: 20px 0;
     color: #00bcd4; /* Couleur de titre - Bleu cyan clair */
     text-shadow: 2px 2px 8px rgba(0,0,0,0.6); /* Ombre pour le texte */
-    padding: 20px;
-    border-radius: 8px; /* Bordures arrondies */
-    background-color: #1a1a1a; /* Fond légèrement plus clair que le fond principal */
-    box-shadow: 0 0 10px rgba(255,255,255,0.1); /* Ombre subtile */
 }
 
-.div4 h1{
-    margin: 0;
+/* Formulaire et bouton */
+.form-control, .btn {
+    margin-bottom: 15px;
 }
 
-#end {
-    display: flex;
-    justify-content: center;
-}
-
-#end a, .btn btn-primary {
+#end a, .btn-primary {
     background-color: #ff0000; /* Couleur de fond - Rouge */
     font-size: 1.125rem;
     border: none;
@@ -47,7 +41,7 @@ body {
     color: #fff; /* Texte en blanc */
 }
 
-#end a:hover, .btn btn-primary:hover {
+#end a:hover, .btn-primary:hover {
     background-color: #cc0000; /* Changement de couleur au survol */
     cursor: pointer; /* Curseur pointeur */
 }
@@ -66,6 +60,7 @@ form#add {
     transition: background-color 0.3s; /* Transition douce */
 }
 
+/* Parent grid container */
 .parent {
     display: grid;
     grid-template-columns: 1fr 0.5fr 2fr 0.5fr 1fr;
@@ -74,43 +69,59 @@ form#add {
     grid-row-gap: 20px;
 }
 
+/* Chart container */
 .div1 {
     grid-area: 2 / 2 / 5 / 5;
     padding: 20px; /* Padding pour le contenu */
     border-radius: 10px; /* Bordures arrondies */
     box-shadow: 0 0 10px rgba(255,255,255,0.1); /* Ombre subtile */
+    height: 75vh;
+    max-height: 75vh;
 }
 
-
-
+/* Other div containers */
 .div2 {
-    grid-area: 3 / 1 / 4 / 2;
+    grid-area: 3 / 1 / 2 / 2;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
 }
 
 .div3 {
-    grid-area: 3 / 5 / 4 / 6;
+    grid-area: 3 / 5 / 2 / 6;
+    height: 35vh;
 }
 
 .div6 {
-    grid-area: 4 / 5 / 5 / 6;
+    grid-area: 4 / 5 / 3 / 6;
     justify-self: center;
+    height: 36vh;
+    overflow-y: scroll;
     width: 100%;
+}
+
+.div4 img {
+    width: 125px;
 }
 
 .div2, .div3, .div6 {
     border-radius: 10px; /* Bordures arrondies */
     padding: 20px; /* Padding pour le contenu */
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Ombre subtile, comme dans le modal */
-    background: linear-gradient(-45deg, #000000, #434343, #000000); /* Fond en dégradé, comme dans le modal */
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3); /* Ombre subtile */
+    background: linear-gradient(-45deg, #000000, #434343, #000000); /* Fond en dégradé */
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 10px; /* Espacement entre les éléments */
     color: #fff; /* Texte en blanc */
     animation: Gradient 15s ease infinite; /* Animation de dégradé */
+}
+
+.div4 {
+    display: flex; /* Pour centrer le contenu de la div4 */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .div2 p, .div3 p, .div6 p {
@@ -123,6 +134,7 @@ form#add {
     margin: 10px 0;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+
 .modal-content {
     background: linear-gradient(-45deg, #000000, #434343, #000000); /* Fond en dégradé */
     color: #fff; /* Texte en blanc */
@@ -164,4 +176,41 @@ form#add {
 
 .banned {
     color: rgb(126, 126, 126);
+}
+
+/* Media queries pour les petits écrans */
+@media (max-width: 576px) {
+
+    .title {
+        font-size: 1.3rem !important;
+    }
+    .parent {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+
+    .div1, .div2, .div3, .div4, .div5, .div6 {
+        width: 90vw;
+        max-width: 100%;
+    }
+
+    .div1 {
+        height: auto;
+    }
+
+    .div3, .div6 {
+        height: auto;
+    }
+
+    .modal-content {
+        max-width: 100%;
+    }
+
+    .toast {
+        left: auto;
+        right: 1%;
+        width: 100%;
+    }
 }
