@@ -1,10 +1,22 @@
 import os
 import json
 import subprocess
+import sys
+
+# Définir les chemins absolus pour les fichiers nécessaires
+base_dir = os.path.abspath(os.path.dirname(__file__))
+dictionary_lookup_path = os.path.join(base_dir, '../game/C/bin/dictionary_lookup')
+lexicon_path = os.path.join(base_dir, '../game/C/arbre_lexicographique.lex')
+c_program_path = os.path.join(base_dir, '../game/C/bin/add_word')
+word2vec_file = os.path.join(base_dir, '../game/C/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin')
+output_dir = os.path.join(base_dir, '../game/partie')
+json_output_file = os.path.join(base_dir, '../websockete/backend/game_data_multi.json')
+java_command_base = os.path.join(base_dir, '../../../jdk-21.0.3/bin/java')
+java_class_path = os.path.join(base_dir, '../game/java/target/classes')
 
 # Fonction pour vérifier si un mot existe dans le lexique.
 def word_exists_in_lexicon(word):
-    command = ['./game/C/bin/dictionary_lookup', './game/C/arbre_lexicographique.lex', word]
+    command = [dictionary_lookup_path, lexicon_path, word]
     result = subprocess.run(command, capture_output=True, text=True)
     return result.stdout.strip() != "-1"  # Vérifier la sortie pour déterminer si le mot existe
 
@@ -96,7 +108,6 @@ def convert_java_result_to_json(java_result_file, json_output_file):
 # Fonction pour ajouter un mot au jeu.
 def add_word_to_game(new_word, pseudo):
     # Lire les données actuelles du fichier JSON
-    json_output_file = 'game_data_multi.json'
     with open(json_output_file, 'r') as json_file:
         game_data = json.load(json_file)
 
@@ -109,18 +120,25 @@ def add_word_to_game(new_word, pseudo):
         raise ValueError(f"The word '{new_word}' is already in the list of words.")
 
     # Exécuter le programme C pour ajouter le nouveau mot
-    c_command = f'./game/C/bin/add_word ./game/C/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin ./game/C/arbre_lexicographique.lex ./game/partie {new_word} {pseudo}'
+    c_command = f'{c_program_path} {word2vec_file} {lexicon_path} {output_dir} {new_word} {pseudo}'
     print(f"Executing command: {c_command}")
     os.system(c_command)
     print("C program execution completed.")
 
     # Exécuter la commande Java pour traiter les résultats
-    result_java_file = f'./game/partie/resultjava_{pseudo}.txt'
-    game_data_file = f'./game/partie/game_data_{pseudo}.txt'
-    java_command = f'../../jdk-21.0.3/bin/java -cp game/java/target/classes sae.Main {result_java_file} {game_data_file} 2>&1'
+    result_java_file = os.path.join(output_dir, f'resultjava_{pseudo}.txt')
+    game_data_file = os.path.join(output_dir, f'game_data_{pseudo}.txt')
+    java_command = f'{java_command_base} -cp {java_class_path} sae.Main {result_java_file} {game_data_file} 2>&1'
     print(f"Executing Java command: {java_command}")
-    os.system(java_command)
+    result = subprocess.run(java_command, shell=True, capture_output=True, text=True)
+    print(f"Java program execution completed with exit code {result.returncode}.")
+    print(f"STDOUT: {result.stdout}")
+    print(f"STDERR: {result.stderr}")
     print("Java program execution completed.")
+
+    # Vérifiez si le fichier Java a été généré
+    if not os.path.exists(result_java_file):
+        raise FileNotFoundError(f"Java result file '{result_java_file}' not found.")
 
     # Lire le fichier de résultat Java et convertir en JSON
     convert_java_result_to_json(result_java_file, json_output_file)
@@ -128,11 +146,17 @@ def add_word_to_game(new_word, pseudo):
 
 # Fonction principale
 if __name__ == "__main__":
-    print("Starting add_word process...")
-    new_word = input("Enter the new word to add: ").strip()
+    if len(sys.argv) < 2:
+        print("Usage: python add_word.py <new_word>")
+        sys.exit(1)
+
+    new_word = sys.argv[1]
     pseudo = "multi"  # Remplacez par le pseudo réel si différent
+
     try:
         add_word_to_game(new_word, pseudo)
         print("Add_word process completed.")
     except ValueError as e:
+        print(f"Error: {e}")
+    except FileNotFoundError as e:
         print(f"Error: {e}")

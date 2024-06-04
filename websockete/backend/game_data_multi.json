@@ -1,0 +1,15 @@
+{
+    "Mots de départ": [
+        "sucre",
+        "blés"
+    ],
+    "Liste des mots": [
+        "blés",
+        "soluble",
+        "sucre"
+    ],
+    "Distances": {
+        "sucre-soluble": "48.82",
+        "blés-soluble": "33.55"
+    }
+}
