@@ -1,12 +1,21 @@
-.glassmorphism {
-    width: 75%;
-    height: 75%;
+main.glassmorphism {
+    position: fixed; /* Ajouter cette ligne pour fixer la position */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centrer horizontalement et verticalement */
+    width: 75vw; /* Utiliser vw pour une largeur basée sur la largeur de la fenêtre */
+    height: 75vh; /* Utiliser vh pour une hauteur basée sur la hauteur de la fenêtre */
+    max-width: 800px; /* Définir une largeur maximale pour éviter qu'elle ne devienne trop grande */
+    max-height: 600px; /* Définir une hauteur maximale pour éviter qu'elle ne devienne trop grande */
     border-radius: 8px;
     padding: 1.875rem;
     text-align: center;
     border: 1px solid rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .glassmorphism .title {
@@ -40,10 +49,9 @@
 }
 
 form {
-    position: absolute;
-    top: 65%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 button#executeButton, button#executeButtonMulti {

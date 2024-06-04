@@ -32,13 +32,16 @@ include_once('admin.php');
             <a class='btn btn-light' href="traces.php">Traces&emsp;<i class="fa-solid fa-clipboard-list"></i></a>
             <a class="btn btn-light" href="profil/profil.php">Mon Profil&emsp;<i class="fa-solid fa-user"></i></a>
         </figure>
-        <main class="position-absolute top-50 start-50 translate-middle glassmorphism">
-            <h1 class="title">Semantic Analogy Explorer</h1>
-            <?php echo "<h2 class='subtitle'>Bienvenue, $pseudo</h2>"; ?>
+        <main class="translate-middle glassmorphism">
             <form method="post" action="game/start_game.php">
+                <h1 class="title">Semantic Analogy Explorer</h1>
+                <?php echo "<h2 class='subtitle'>Bienvenue, $pseudo</h2>"; ?>
                 <h2 class="subtitle2"><i class="fa-solid fa-gamepad"></i>&emsp;Choisissez un mode de jeu&emsp;<i class="fa-solid fa-dice"></i></h2>
-                <button id="executeButton" class="btn btn-primary btn-lg" type="submit">Solo&emsp;<i class="fa-solid fa-user"></i></button>
-                <button id="executeButtonMulti" class="btn btn-primary btn-lg" type="reset" onclick="window.location.href='http://localhost:3000';">Multijoueur&emsp;<i class="fa-solid fa-users"></i></button>
+                <div class="buttons-play">
+                    <button id="executeButton" class="btn btn-primary btn-lg" type="submit">Solo&emsp;<i class="fa-solid fa-user"></i></button>
+                    <button id="executeButtonMulti" class="btn btn-primary btn-lg" type="reset" onclick="window.location.href='http://localhost:3000';">Multijoueur&emsp;<i class="fa-solid fa-users"></i></button>
+                </div>
+                
             </form>
         </main>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
