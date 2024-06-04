@@ -24,10 +24,11 @@ $tracesOnlyMeRequest->closeCursor();
 <html>
 <head>
 	<meta charset="UTF-8">
+<link rel="icon" href="img/sinje_magique.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Traces - Semantic Analogy Explorer</title>
-	<meta name="description" content="Venez Jouez à Semantic Analogy Explorer (SAE), un jeu en ligne à un ou plusieurs joueurs basé sur les similarités entre mots : « Semantic Analogy Explorer ». Chaque joueur reçoit un mot de départ et un mot cible et propose des mots proches afin de créer une chaîne de mots similaires pour relier le mot de départ au mot cible. ">
-	<meta name="keywords" content="Semantic Analogy Explorer, SAE, jeu, jeu en ligne, jeu de mots, jeu de lettres, jeu de lettres en ligne, jeu de mots en ligne, jeu de lettres multijoueur, jeu de mots multijoueur, jeu de lettres multijoueur en ligne, jeu de mots multijoueur en ligne, jeu de lettres multijoueur gratuit, jeu de mots multijoueur gratuit, jeu de lettres multijoueur gratuit en ligne, jeu de mots multijoueur gratuit en ligne, jeu de lettres multijoueur gratuit sans inscription, jeu de mots multijoueur gratuit sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription, jeu de mots multijoueur gratuit en ligne sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de mots multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de lettres multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de mots multijoueur gratuit en ligne sans inscription et sans téléchargement">
+	<title>Traces - Wacky Monkey's Words</title>
+	<meta name="description" content="Venez Jouez à Wacky Monkey's Words (SAE), un jeu en ligne à un ou plusieurs joueurs basé sur les similarités entre mots : « Wacky Monkey's Words ». Chaque joueur reçoit un mot de départ et un mot cible et propose des mots proches afin de créer une chaîne de mots similaires pour relier le mot de départ au mot cible. ">
+	<meta name="keywords" content="Wacky Monkey's Words, SAE, jeu, jeu en ligne, jeu de mots, jeu de lettres, jeu de lettres en ligne, jeu de mots en ligne, jeu de lettres multijoueur, jeu de mots multijoueur, jeu de lettres multijoueur en ligne, jeu de mots multijoueur en ligne, jeu de lettres multijoueur gratuit, jeu de mots multijoueur gratuit, jeu de lettres multijoueur gratuit en ligne, jeu de mots multijoueur gratuit en ligne, jeu de lettres multijoueur gratuit sans inscription, jeu de mots multijoueur gratuit sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription, jeu de mots multijoueur gratuit en ligne sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de mots multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de lettres multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de mots multijoueur gratuit en ligne sans inscription et sans téléchargement">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://kit.fontawesome.com/3f3ecfc27b.js"></script>
 	<link rel="stylesheet" href="css/style.css">
@@ -62,13 +63,17 @@ $tracesOnlyMeRequest->closeCursor();
     
     <?php
     $active = "";
-    
+    $everytrace = count($tracesEveryoneResult);
+    $plus = "";
+    if ($everytrace >+ 500) {
+        $plus = "+";
+    }
     if ($isAdmin) {
         echo '<div class="tab-pane fade show active" id="everyone" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
         <h1 class="title">500 Dernières Traces de Tous les Utilisateurs</h1>
         <!-- Nombre de traces -->
         <div class="text-end">
-            <p class="text-white">Nombre de traces : <?php echo count($tracesEveryoneResult); ?></p>
+            <p class="text-white">Nombre de traces : '.$plus.$everytrace.'</p>
         </div>
         <div class="table-responsive">
             <table class="table table-hover table-bordered">
@@ -100,12 +105,12 @@ $tracesOnlyMeRequest->closeCursor();
             </table>
         </div>  
     </div>';
-
-    $active = "show active";
     
+    } else {
+        $active = "show active";
     }
     ?>
-        <div class="tab-pane fade <?php $active ?>" id="only-me" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <div class="tab-pane fade <?php echo $active ?>" id="only-me" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
             <h1 class="title">500 Dernières Traces de <?php echo $pseudo; ?></h1>
             <!-- Nombre de traces -->
             <div class="text-end">
