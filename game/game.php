@@ -18,7 +18,7 @@ $lastWord = $words[1];
 $messagesErreur = [
     1 => "Le mot n'est pas dans le dictionnaire.",
     2 => "Le mot est déjà dans la chaîne.",
-    3 => "Le mot n'est pas assez proche du dernier mot de la chaîne."
+    3 => "La similarité est trop faible."
 ];
 // Si un message d’erreur est passé dans l'URL, sinon message vide erreur = 0
 $erreur = $_GET['erreur'] ?? 0;
