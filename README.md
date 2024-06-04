@@ -18,6 +18,8 @@ Ce projet est un jeu combinant réflexion et justesse. Le but ? Faire le meilleu
 
 Sur le site web, vous pourrez suivre les scores de vos parties, consulter le classement des meilleurs joueurs et accéder aux règles en cas d'oubli.
 
+Jouez au jeu en cliquant 👉[ICI](http://perso-etudiant.u-pem.fr/~thamiz.sarboudine/SAE/SAE_SEMANTIC)👈
+
 ## Déployer le Projet
 
 Pour déployer le projet, voici les étapes à suivre :
