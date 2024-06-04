@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['words'][] = $newWord;
     unset($_POST['word']);
 
-    $commande_add_word = './C/bin/add_word C/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin ' . $newWord . ' ' . $_SESSION['pseudo'];
+    $commande_add_word = './C/bin/add_word C/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin C/arbre_lexicographique.lex partie/ ' . $newWord . ' ' . $_SESSION['pseudo'];
     exec($commande_add_word);
     // Java : trier les paires
     $commandeJar = "../../../jdk-21.0.3/bin/java -cp java/target/classes sae.Main partie/resultjava_$_SESSION[pseudo].txt partie/game_data_" .$_SESSION["pseudo"]. ".txt 2>&1";
