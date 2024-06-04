@@ -62,6 +62,7 @@ Pour le moment, nous n'avons réussi qu'à implémenter un chat en raison de pro
 ## Bugs et Fonctionnalités Non Encore Implémentées
 
 Le mode multijoueur n'a pas encore été implémenté en ligne en raison de l'impossibilité d'utiliser des websockets sur les serveurs de l'université. Il est en cours d'implémentation en local.
+Il est possible de lancer le mode multijoueur en local et de jouer à deux grâce au chat. Le chat permet de communiquer avec l'autre joueur ou d'insérer son mot. Bien que nous n'ayons pas eu le temps de l'optimiser, la fonctionnalité principale, c'est-à-dire la connexion en mode multijoueur et le jeu, a été réalisée.
 
 ## Fusion du Groupe
 
