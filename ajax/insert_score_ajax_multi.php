@@ -1,5 +1,4 @@
 <?php
-
 include("../conf.bkp.php");
 header('Content-Type: application/json');
 

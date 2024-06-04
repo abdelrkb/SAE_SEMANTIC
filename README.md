@@ -57,11 +57,12 @@ Bien que le mode multijoueur ne fonctionne pas encore en ligne, il sera disponib
 1. Suivez la méthodologie du README du projet [Chatac](https://gitlab.com/codefish42/chatac).
 2. Lancez le multijoueur en local après nous avoir demandé le mot de passe (il sera donné aux enseignants pour le rendu).
 
-Pour le moment, nous n'avons réussi qu'à implémenter un chat en raison de problèmes techniques. Le jeu sera cependant disponible très bientôt !
+Pour le moment, en raison de problèmes techniques, nous n'avons réussi qu'à implémenter un chat permettant de communiquer entre les 2 joueurs ainsi que d'insérer les mots pour jouer. Le jeu fonctionne et le MST se construit parfaitement bien. Il reste néanmoins l'ergonomie et l'optimisation du multijoueur c'est-à-dire : gestion du temps, tour par tour etc...
 
 ## Bugs et Fonctionnalités Non Encore Implémentées
 
 Le mode multijoueur n'a pas encore été implémenté en ligne en raison de l'impossibilité d'utiliser des websockets sur les serveurs de l'université. Il est en cours d'implémentation en local.
+Il est possible de lancer le mode multijoueur en local et de jouer à deux grâce au chat. Le chat permet de communiquer avec l'autre joueur ou d'insérer son mot. Bien que nous n'ayons pas eu le temps de l'optimiser, la fonctionnalité principale, c'est-à-dire la connexion en mode multijoueur et le jeu, a été réalisée.
 
 ## Fusion du Groupe
 
