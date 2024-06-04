@@ -1,12 +1,13 @@
+/* Style par défaut pour le conteneur principal */
 main.glassmorphism {
-    position: fixed; /* Ajouter cette ligne pour fixer la position */
+    position: fixed;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%); /* Centrer horizontalement et verticalement */
-    width: 75vw; /* Utiliser vw pour une largeur basée sur la largeur de la fenêtre */
-    height: 75vh; /* Utiliser vh pour une hauteur basée sur la hauteur de la fenêtre */
-    max-width: 800px; /* Définir une largeur maximale pour éviter qu'elle ne devienne trop grande */
-    max-height: 600px; /* Définir une hauteur maximale pour éviter qu'elle ne devienne trop grande */
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 1200px;
+    height: auto;
+    max-height: 90vh;
     border-radius: 8px;
     padding: 1.875rem;
     text-align: center;
@@ -14,47 +15,52 @@ main.glassmorphism {
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
+/* Ajustements pour les écrans de taille moyenne */
+@media (min-width: 768px) {
+    main.glassmorphism {
+        width: 75vw;
+        height: 75vh;
+    }
+}
+
+/* Style pour les titres et sous-titres */
 .glassmorphism .title {
-    margin-top: 5rem;
+    margin-top: 2rem;
     color: #fff;
     margin-bottom: 1.25rem;
 }
 
-.glassmorphism .subtitle {
-    font-size: 1.5rem;
-    margin-top: 2.5rem;
-    color: #fff;
-    margin-bottom: 1.25rem;
-}
-
+.glassmorphism .subtitle,
 .glassmorphism .subtitle2 {
     font-size: 1.5rem;
     color: #fff;
-    padding-bottom: 1.25rem;
+    margin: 1.25rem 0;
 }
 
-.btn {
-    top: 20%
-}
-
-.text-end a {
-    top: 0;
-    right: 0;
-    margin: 10px;
-    padding: 10px;
-}
-
-form {
-    position: relative;
+/* Style pour le conteneur des boutons */
+.buttons-play {
     display: flex;
     flex-direction: column;
+    gap: 1rem;
+    width: 100%;
 }
 
-button#executeButton, button#executeButtonMulti {
+/* Ajustements pour les écrans de taille moyenne */
+@media (min-width: 768px) {
+    .buttons-play {
+        flex-direction: row;
+        justify-content: center;
+    }
+}
+
+/* Style pour les boutons */
+button#executeButton,
+button#executeButtonMulti {
     margin-top: 1.5rem;
     background: #fff;
     color: #000;
@@ -64,10 +70,104 @@ button#executeButton, button#executeButtonMulti {
     font-size: 1.2rem;
     border: 2px solid transparent;
     transition: 0.3s ease;
+    width: 100%;
+    max-width: 200px;
 }
 
-button#executeButton:hover, button#executeButtonMulti:hover {
+button#executeButton:hover,
+button#executeButtonMulti:hover {
     color: #fff;
     border-color: #fff;
     background: rgba(255, 255, 255, 0.15);
+}
+
+/* Ajustements spécifiques pour les petits écrans */
+@media (max-width: 576px) {
+    main.glassmorphism {
+        width: 95vw;
+        height: auto;
+        max-height: 90vh;
+        padding: 1rem;
+    }
+
+    .subtitle2 {
+        font-size: 1rem !important;
+    }
+
+    .glassmorphism .title {
+        font-size: 1.5rem;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .glassmorphism .subtitle,
+    .glassmorphism .subtitle2 {
+        font-size: 1.2rem;
+        margin: 1rem 0;
+    }
+
+    button#executeButton,
+    button#executeButtonMulti {
+        font-size: 1rem;
+        padding: 0.5em;
+    }
+
+    .buttons-play {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    /* Masquer les boutons de menu latéraux */
+    figure.text-end {
+        display: none !important;
+    }
+
+    /* Barre de navigation en bas de l'écran */
+    .navbar-bottom {
+        display: flex !important;
+    }
+
+    .toast {
+        left: auto;
+        right: 1%;
+        width: 100%;
+    }
+}
+
+/* Masquer la barre de navigation en bas par défaut */
+.navbar-bottom {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    justify-content: space-around;
+    padding: 0.5rem 0;
+    z-index: 1000;
+    left: 0;
+    border-radius: 15px 15px 0 0;
+}
+
+.navbar-bottom a {
+    color: #000;
+    font-size: 1.5rem;
+    text-align: center;
+    flex: 1;
+}
+
+/* Barre de navigation en haut pour les écrans plus larges */
+figure.text-end {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+figure.text-end img {
+    height: 100px;
+    margin-right: auto; /* Pousse les boutons vers la droite */
+}
+
+.glassmorphism form img {
+    height: 200px;
 }

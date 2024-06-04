@@ -23,7 +23,6 @@ $messagesErreur = [
 // Si un message d’erreur est passé dans l'URL, sinon message vide erreur = 0
 $erreur = $_GET['erreur'] ?? 0;
 
-
 // Utilisation d’un tableau associatif pour stocker les relations entre les mots
 $relations = [];
 
@@ -69,17 +68,17 @@ $scoreResult = $scoreRequest->fetch(PDO::FETCH_OBJ);
 $scoreRequest->closeCursor();
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 
 <head>
 	<meta charset="UTF-8">
+<link rel="icon" href="../img/sinje_magique.ico" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Classement - Semantic Analogy Explorer</title>
-	<meta name="description" content="Venez Jouez à Semantic Analogy Explorer (SAE), un jeu en ligne à un ou plusieurs joueurs basé sur les similarités entre mots : « Semantic Analogy Explorer ». Chaque joueur reçoit un mot de départ et un mot cible et propose des mots proches afin de créer une chaîne de mots similaires pour relier le mot de départ au mot cible. ">
-	<meta name="keywords" content="Semantic Analogy Explorer, SAE, jeu, jeu en ligne, jeu de mots, jeu de lettres, jeu de lettres en ligne, jeu de mots en ligne, jeu de lettres multijoueur, jeu de mots multijoueur, jeu de lettres multijoueur en ligne, jeu de mots multijoueur en ligne, jeu de lettres multijoueur gratuit, jeu de mots multijoueur gratuit, jeu de lettres multijoueur gratuit en ligne, jeu de mots multijoueur gratuit en ligne, jeu de lettres multijoueur gratuit sans inscription, jeu de mots multijoueur gratuit sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription, jeu de mots multijoueur gratuit en ligne sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de mots multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de lettres multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de mots multijoueur gratuit en ligne sans inscription et sans téléchargement">
+	<title>Classement - Wacky Monkey's Words</title>
+	<meta name="description" content="Venez Jouez à Wacky Monkey's Words (SAE), un jeu en ligne à un ou plusieurs joueurs basé sur les similarités entre mots : « Wacky Monkey's Words ». Chaque joueur reçoit un mot de départ et un mot cible et propose des mots proches afin de créer une chaîne de mots similaires pour relier le mot de départ au mot cible. ">
+	<meta name="keywords" content="Wacky Monkey's Words, SAE, jeu, jeu en ligne, jeu de mots, jeu de lettres, jeu de lettres en ligne, jeu de mots en ligne, jeu de lettres multijoueur, jeu de mots multijoueur, jeu de lettres multijoueur en ligne, jeu de mots multijoueur en ligne, jeu de lettres multijoueur gratuit, jeu de mots multijoueur gratuit, jeu de lettres multijoueur gratuit en ligne, jeu de mots multijoueur gratuit en ligne, jeu de lettres multijoueur gratuit sans inscription, jeu de mots multijoueur gratuit sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription, jeu de mots multijoueur gratuit en ligne sans inscription, jeu de lettres multijoueur gratuit en ligne sans inscription et sans téléchargement, jeu de mots multijoueur gratuit en ligne sans inscription et sans téléchargement">
 	<link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/css_game.css">
-    <link href="path/to/bootstrap.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.highcharts.com/highcharts.js"></script>
     <script src="https://code.highcharts.com/modules/networkgraph.js"></script>
@@ -89,18 +88,17 @@ $scoreRequest->closeCursor();
         * {
             color: white;
         }
-
         label {
             color: black;
         }
     </style>
 </head>
 
-<body class="black">
+    <body class="black">
+    <div class="div4">
+        <img src="../img/sinje_off.png" alt="Logo">
+    </div>
     <div class="parent">
-        <div class="div4">
-            <h1 class="title">Semantic Analogy Explorer</h1>
-        </div>
         <div class="div1" id="container"></div> <!-- Le graphique sera affiché ici -->
         <!-- Formulaire pour ajouter un nouveau mot -->
         <div class="div2">
@@ -118,8 +116,7 @@ $scoreRequest->closeCursor();
         <div class="div3">
             <p>Score actuel : <?php echo calculateScore(); ?></p>
             <p>Nombre de mots : <?php echo count($words); ?></p>
-            <p>Dernier mot : <?php if (count($_SESSION['words']) > 2) echo ucfirst($_SESSION['words'][count($_SESSION['words']) - 1]); else echo "Aucun mot entré"; ?>
-            </p>
+            <p>Dernier mot : <?php if (count($_SESSION['words']) > 2) echo ucfirst($_SESSION['words'][count($_SESSION['words']) - 1]); else echo "Aucun mot entré"; ?></p>
             <p>Nombre de mots restants : <?php echo 7 - count($words) ?></p>
         </div>
         <div class="div6">
@@ -157,10 +154,9 @@ $scoreRequest->closeCursor();
     </div>
     <?php
     if ($erreur != 0) {
-        echo "<div id='adminToast' class='toast'>".$messagesErreur[$erreur]."</div>";
-    echo '<script>document.addEventListener("DOMContentLoaded", function() { showToast(); });</script>';
+        echo "<div id='adminToast' class='toast'><i class='fa-solid fa-circle-exclamation'></i>".$messagesErreur[$erreur]."</div>";
+        echo '<script>document.addEventListener("DOMContentLoaded", function() { showToast(); });</script>';
     }
-    
     ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
@@ -170,6 +166,7 @@ $scoreRequest->closeCursor();
         toast.className = "toast show";
         setTimeout(function(){ toast.className = toast.className.replace("show", ""); }, 3000);
     }
+
     // Fonction pour charger les données depuis PHP
     function loadData() {
         // Charger les données depuis le fichier PHP
@@ -253,7 +250,6 @@ $scoreRequest->closeCursor();
         return chart;
     }
 
-
     // Charger les données et créer le graphique
     loadData();
 
@@ -265,6 +261,7 @@ $scoreRequest->closeCursor();
             myInput.focus();
         }
     });
+
     document.addEventListener('DOMContentLoaded', function() {
         // Récupérez le modal par son ID
         var endGameModal = new bootstrap.Modal(document.getElementById('endGameModal'));
@@ -292,9 +289,6 @@ $scoreRequest->closeCursor();
             window.location.href = "end_game.php";
         });
     });
-
-
-
 
 </script>
 </body>
