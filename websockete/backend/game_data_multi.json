@@ -1,17 +1,13 @@
 {
     "Mots de départ": [
-        "serpents",
-        "farine"
+        "écureuil",
+        "poivre"
     ],
     "Liste des mots": [
-        "mines",
-        "narines",
-        "farine",
-        "serpents"
+        "écureuil",
+        "poivre"
     ],
     "Distances": {
-        "serpents-mines": "50.39",
-        "narines-mines": "59.6",
-        "farine-narines": "59.94"
+        "écureuil-poivre": "41.88"
     }
 }

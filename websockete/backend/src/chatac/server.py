@@ -52,6 +52,7 @@ it is up to you to adapt it for you real needs with custom hooks! Good luck!
 
 import asyncio, logging, os, sys, json, time, subprocess
 from aiohttp import web, WSMsgType, WSCloseCode, ClientConnectionError
+import aiohttp
 from typing import Dict, Any, List
 from .hooks import ChatHooks
 from .utils import nonify_exception, cancel_and_get_result
@@ -283,10 +284,9 @@ class ChatServer(object):
             # we manage each message
             async for msg in ws:
                 if msg.type == WSMsgType.TEXT:
-                    # we only accept text messages that are JSON formatted and contain a type field
                     decoded_msg = nonify_exception(lambda: json.loads(msg.data))
                     msg_kind = nonify_exception(lambda: decoded_msg['kind'])
-                    
+
                     if decoded_msg is None:
                         await client.send_message('json_invalid')
                     elif msg_kind is None:
@@ -300,6 +300,8 @@ class ChatServer(object):
                                 await client.send_message('command_invalid')
                         elif msg_kind == 'new_game':
                             await self.execute_new_game_script(client)
+                        elif msg_kind == 'end_game':
+                            await self.end_game(client)
                         elif msg_kind == 'join_waiting_room':
                             waiting_room_name = str(decoded_msg.get('waiting_room_name', '')).strip()
                             token = str(decoded_msg.get('token', '')).strip()
@@ -314,10 +316,8 @@ class ChatServer(object):
                                 if not isinstance(client_identity, dict):
                                     await client.send_message('waiting_room_join_refused', reason=str(client_identity))
                                 else:
-                                    # we put the user in the waiting room
                                     waiting_room = self._waiting_rooms[waiting_room_name]
                                     if client.state == 'waiting':
-                                        # already waiting in another room, we cancel the join
                                         await client.waiting_room.cancel_client_id(client.id)
                                     client.identity = client_identity
                                     await waiting_room.queue_client_id(client.id)
@@ -462,6 +462,51 @@ class ChatServer(object):
             await client.send_message('new_game_result', output="Error: Command timed out")
         except Exception as e:
             await client.send_message('new_game_result', output=f"Error: {str(e)}")
+
+    async def end_game(self, client):
+        try:
+            # Construct the absolute path to the game data JSON file
+            output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
+            logger.info(f"Looking for game data in: {output_json_path}")
+
+            # Check if the game data file exists
+            if os.path.exists(output_json_path):
+                with open(output_json_path, 'r') as json_file:
+                    game_data = json.load(json_file)
+                logger.info(f"Game data loaded: {game_data}")
+
+                pseudo = client.identity.get('name')
+
+                # Extract the minimum distance
+                distances = game_data.get('Distances', {})
+                if distances:
+                    min_distance = min(distances.values())
+                else:
+                    min_distance = "No score found"
+
+                # Prepare the payload for the POST request
+                payload = {'pseudo': pseudo, 'score': min_distance}
+                logger.info(f"Sending payload to the server: {payload}")
+
+                # Construct the correct URL for the server
+                url = 'http://localhost:8888/SAE_SEMANTIC/ajax/insert_score_ajax_multi.php'  # Adjust this URL as necessary
+                async with aiohttp.ClientSession() as session:
+                    async with session.post(url, json=payload) as resp:
+                        response_text = await resp.text()
+                        logger.info(f"Score submission response text: {response_text}")
+                        try:
+                            response_data = await resp.json()
+                            logger.info(f"Score submission response JSON: {response_data}")
+                            await client.send_message('game_ended', response=response_data)
+                        except json.JSONDecodeError:
+                            logger.error("Failed to decode JSON response")
+                            await client.send_message('game_ended', response="Error: Failed to decode JSON response")
+            else:
+                logger.error("Game data JSON file not found")
+                await client.send_message('game_ended', response="Error: JSON file not found")
+        except Exception as e:
+            logger.error(f"Error ending game: {str(e)}")
+            await client.send_message('game_ended', response=f"Error: {str(e)}")
 
             
     async def broadcast_message(self, kind: str, content: Any):

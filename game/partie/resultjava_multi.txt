@@ -1,10 +1,7 @@
-Score: 50.38999938964844
+Score: 41.880001068115234
 Mots de départ :
-serpents
-farine
+écureuil
+poivre
 Distance entre les mots :
-serpents_mines, distance: 50.39
-narines_mines, distance: 59.6
-farine_narines, distance: 59.94
+écureuil_poivre, distance: 41.88
 Mots bannis:
-canines
