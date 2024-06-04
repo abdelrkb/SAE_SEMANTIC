@@ -10,34 +10,36 @@
 
 int main(int argc, char **argv) {
     if (argc == 1) {
-        printf("Authors : \nChamsedine AMOUCHE\nCédric MARIYA-CONSTANTINE\nTHAMIZ SARBOUDINE\nYACINE ZEMOUCHE\n");
+        printf("Authors : \nChamsedine AMOUCHE\nELYAS MALOUM\nTHAMIZ SARBOUDINE\nABDELNOUR REKKAB\n");
 
         return EXIT_FAILURE;
     }
 
     if (argc==2 && strcmp("--help", argv[1])==0){
         printf("Usage:\n");
-        printf(" %s dictionary word pseudo\n", argv[0]);
-        printf(" where dictionary is the word2vec file (.bin), word is the word to add in the game and pseudo is the pseudo of the player.\n");
+        printf(" %s dictionary lexicon_path ouput_dir word pseudo\n", argv[0]);
+        printf(" where dictionary is the word2vec file (.bin), lexicon_path is the path to the lexicon file, output_dir is the directory for the output file, word is the word to add in the game and pseudo is the pseudo of the player.\n");
         return EXIT_FAILURE;
     }
 
-    if (argc != 4) {
+    if (argc != 6) {
         return EXIT_FAILURE;
     }
 
-    StaticTree st = readLexFile("C/arbre_lexicographique.lex");
-    long newWordOffset = findWord(&st, argv[2]);
+    const char *output_dir = argv[3];
+    const char *lexicon_path = argv[2];
+    StaticTree st = readLexFile(lexicon_path);
+    long newWordOffset = findWord(&st, argv[4]);
 
     // Récupérer le pseudo à partir des arguments du programme
-    char *pseudo = argv[3];
+    char *pseudo = argv[5];
 
     // Préparer le nom de fichier
     char filename[100]; // Assurez-vous que le tableau est assez grand
-    sprintf(filename, "partie/game_data_%s.txt", pseudo);
+    sprintf(filename, "%s/game_data_%s.txt", output_dir, pseudo);
     FILE *file = fopen(filename, "r");
     if (!file) {
-        perror("Failed to open game data file");
+        fprintf(stderr, "Failed to open game data file: %s/game_data_%s.txt\n", output_dir, pseudo);
         return EXIT_FAILURE;
     }
 
@@ -64,15 +66,15 @@ int main(int argc, char **argv) {
         if (readingWordsSection && !reachedDistancesSection && line[0] != '\n') {
             char *word = strtok(line, ", ");
             char *offsetStr = strtok(NULL, " offset: \n");
-                if (word && offsetStr && existingWordCount < MAX_WORDS) {
-                    long offset = atol(offsetStr);
-                    if (offset > 0) { // Vérification de l'offset
-                        strcpy(existingWords[existingWordCount].word, word);
-                        existingWords[existingWordCount].offset = offset;
-                        //printf("Read word: %s, Offset: %ld\n", existingWords[existingWordCount].word, existingWords[existingWordCount].offset); // Debug line
-                        existingWordCount++;
-                    }
+            if (word && offsetStr && existingWordCount < MAX_WORDS) {
+                long offset = atol(offsetStr);
+                if (offset > 0) { // Vérification de l'offset
+                    strcpy(existingWords[existingWordCount].word, word);
+                    existingWords[existingWordCount].offset = offset;
+                    //printf("Read word: %s, Offset: %ld\n", existingWords[existingWordCount].word, existingWords[existingWordCount].offset); // Debug line
+                    existingWordCount++;
                 }
+            }
         }
     }
 
@@ -118,7 +120,7 @@ int main(int argc, char **argv) {
     }
 
     // Ajouter le nouveau mot et son offset
-    fprintf(file, "%s, offset: %ld\n", argv[2], newWordOffset);
+    fprintf(file, "%s, offset: %ld\n", argv[4], newWordOffset);
 
     // Écrire la section "Distance entre les mots"
     fprintf(file, "Distance entre les mots :\n");
@@ -128,16 +130,14 @@ int main(int argc, char **argv) {
 
     // Ajouter les nouvelles distances
     for (int i = 0; i < existingWordCount; i++) {
-        double semanticDistance = computeSemanticSimilarity(argv[1], "C/arbre_lexicographique.lex", existingWords[i].word, argv[2]);
-        int orthographicDistance = lev_similarity(existingWords[i].word, argv[2]);
+        double semanticDistance = computeSemanticSimilarity((char *)argv[1], (char *)lexicon_path, existingWords[i].word, (char *)argv[4]);
+        int orthographicDistance = lev_similarity(existingWords[i].word, (char *)argv[4]);
         double averageDistance = (semanticDistance + orthographicDistance) / 2.0;
 
-        fprintf(file, "%s-%s, distance: %.2f\n", existingWords[i].word, argv[2], averageDistance);
+        fprintf(file, "%s-%s, distance: %.2f\n", existingWords[i].word, argv[4], averageDistance);
     }
 
     fclose(file);
 
-
     return EXIT_SUCCESS;
-
 }
