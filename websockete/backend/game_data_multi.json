@@ -1,15 +1,17 @@
 {
     "Mots de départ": [
-        "curry",
-        "montagnes"
+        "serpents",
+        "farine"
     ],
     "Liste des mots": [
-        "faire",
-        "montagnes",
-        "curry"
+        "mines",
+        "narines",
+        "farine",
+        "serpents"
     ],
     "Distances": {
-        "curry-faire": "35.43",
-        "montagnes-faire": "40.0"
+        "serpents-mines": "50.39",
+        "narines-mines": "59.6",
+        "farine-narines": "59.94"
     }
 }

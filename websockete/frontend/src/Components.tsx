@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from 'react';
 import './Components.css';
 import WordGraph from './WordGraph'; // Importez votre composant WordGraph
 
@@ -102,6 +102,7 @@ export const ChatManager = (props: {socketUrl: string}) => {
     const [error, setError] = React.useState<string>('');
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoom[]>([]);
     const [pythonResult, setPythonResult] = React.useState<any>(null); // État pour le résultat de l'exécution Python
+    const [graphKey, setGraphKey] = React.useState<string>('initial'); // clé unique pour forcer la recréation du graphe
 
     const onNewSocketMessage = (kind: string, content: Record<string, any>) => {
         console.debug("Received message from websocket", content);
@@ -166,11 +167,9 @@ export const ChatManager = (props: {socketUrl: string}) => {
                 break;
 
             case 'python_execution_result':
-                setPythonResult(content.output); // Stocker le résultat de l'exécution Python
-                break;
-
             case 'new_game_result': // New case for handling the new game result
-                setPythonResult(content.output); // Store the new game result to be used in the graph
+                setPythonResult(content.output); // Store the result to be used in the graph
+                setGraphKey(`graph_${Date.now()}`); // Generate a new unique key
                 break;
 
             case 'server_shutdown':
@@ -283,6 +282,6 @@ export const ChatManager = (props: {socketUrl: string}) => {
         {'messages' in chatState && 
             <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} onNewGame={executeNewGame} />
         }
-        <WordGraph data={pythonResult?.Distances ? pythonResult : null} /> {/* Pass data correctly to WordGraph */}
+        {pythonResult && <WordGraph key={graphKey} data={pythonResult} />}
     </div>;
 }

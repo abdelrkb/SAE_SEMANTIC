@@ -1,8 +1,10 @@
-Score: 35.43000030517578
+Score: 50.38999938964844
 Mots de départ :
-curry
-montagnes
+serpents
+farine
 Distance entre les mots :
-curry_faire, distance: 35.43
-montagnes_faire, distance: 40.0
+serpents_mines, distance: 50.39
+narines_mines, distance: 59.6
+farine_narines, distance: 59.94
 Mots bannis:
+canines

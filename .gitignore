@@ -12,3 +12,6 @@ game/C/bin/new_game
 game/C/bin/sem_similarity
 game/C/bin/dictionary_lookup
 code_secret.php
+game/partie/game_data_multi.txt
+game/partie/resultjava_multi.txt
+websockete/backend/game_data_multi.json

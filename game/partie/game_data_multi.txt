@@ -1,11 +1,20 @@
 Mots de départ :
-curry,11350967
-montagnes,3829597
+serpents,12942109
+farine,3266790
 Liste des mots :
-curry, offset: 11350967
-montagnes, offset: 3829597
-faire, offset: 45884
+serpents, offset: 12942109
+farine, offset: 3266790
+narines, offset: 23563387
+canines, offset: 26042450
+mines, offset: 3882248
 Distance entre les mots :
-curry-montagnes, distance: 22.26
-curry-faire, distance: 35.43
-montagnes-faire, distance: 40.00
+serpents-farine, distance: 29.45
+serpents-narines, distance: 44.05
+farine-narines, distance: 59.94
+serpents-canines, distance: 37.74
+farine-canines, distance: 52.43
+narines-canines, distance: 58.90
+serpents-mines, distance: 50.39
+farine-mines, distance: 48.27
+narines-mines, distance: 59.60
+canines-mines, distance: 60.80
