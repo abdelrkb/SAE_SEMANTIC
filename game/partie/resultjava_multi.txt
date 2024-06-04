@@ -1,9 +1,8 @@
-Score: 33.54999923706055
+Score: 35.43000030517578
 Mots de départ :
-sucre
-blés
+curry
+montagnes
 Distance entre les mots :
-sucre_soluble, distance: 48.82
-blés_soluble, distance: 33.55
+curry_faire, distance: 35.43
+montagnes_faire, distance: 40.0
 Mots bannis:
-sucré

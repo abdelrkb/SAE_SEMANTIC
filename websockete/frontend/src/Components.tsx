@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import './Components.css';
+import WordGraph from './WordGraph'; // Importez votre composant WordGraph
 
 export interface WaitingRoom {
     name: string;
@@ -80,9 +81,9 @@ export const ChatSession = (props: {messages: Message[], active: boolean, onMess
         <ChatMessagesDisplayer messages={props.messages} />
         {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
         <div>
+            <button onClick={props.onNewGame}>Start New Game</button>
             <button onClick={() => props.onLeaving()} disabled={!props.active}>Quitter le chat de partie</button>
             <button onClick={() => props.onClosing()} disabled={props.active}>Fermer le chat de la partie</button>
-            <button onClick={props.onNewGame}>Start New Game</button>
         </div>
     </div>;
 }
@@ -166,6 +167,10 @@ export const ChatManager = (props: {socketUrl: string}) => {
 
             case 'python_execution_result':
                 setPythonResult(content.output); // Stocker le résultat de l'exécution Python
+                break;
+
+            case 'new_game_result': // New case for handling the new game result
+                setPythonResult(content.output); // Store the new game result to be used in the graph
                 break;
 
             case 'server_shutdown':
@@ -278,6 +283,6 @@ export const ChatManager = (props: {socketUrl: string}) => {
         {'messages' in chatState && 
             <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} onNewGame={executeNewGame} />
         }
-        {pythonResult && <PythonResultDisplayer result={pythonResult} />} {/* Afficher le résultat */}
+        <WordGraph data={pythonResult?.Distances ? pythonResult : null} /> {/* Pass data correctly to WordGraph */}
     </div>;
 }

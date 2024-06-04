@@ -1,15 +1,15 @@
 {
     "Mots de départ": [
-        "sucre",
-        "blés"
+        "curry",
+        "montagnes"
     ],
     "Liste des mots": [
-        "blés",
-        "soluble",
-        "sucre"
+        "faire",
+        "montagnes",
+        "curry"
     ],
     "Distances": {
-        "sucre-soluble": "48.82",
-        "blés-soluble": "33.55"
+        "curry-faire": "35.43",
+        "montagnes-faire": "40.0"
     }
 }

@@ -23,8 +23,8 @@ def word_exists_in_lexicon(word):
 # Fonction pour lire les données du jeu à partir d'un fichier texte et les convertir en un dictionnaire.
 def read_game_data(file_path):
     game_data = {
-        "Mots de départ": [],
-        "Liste des mots": [],
+        "Mots_de_départ": [],
+        "Liste_des_mots": [],
         "Distances": {}
     }
 
@@ -33,7 +33,7 @@ def read_game_data(file_path):
         current_section = None
         for line in lines:
             line = line.strip()
-            if line == "Mots de départ :":
+            if line == "Mots_de_départ :":
                 current_section = "Mots de départ"
                 continue
             elif line == "Liste des mots :":

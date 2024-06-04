@@ -381,67 +381,6 @@ class ChatServer(object):
             logger.info(f"The client {client} has leaved")
 
 
-    async def execute_python_script(self, client, command):
-        try:
-            # Construire le chemin absolu du script
-            script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/add_word.py'))
-            # Chemin du fichier JSON généré
-            output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
-            
-            # Exécuter le script avec le message comme argument
-            result = subprocess.run(['python3', script_path, command], capture_output=True, text=True, timeout=10)
-            output = result.stdout + result.stderr
-            
-            # Lire le fichier JSON généré
-            if os.path.exists(output_json_path):
-                with open(output_json_path, 'r') as json_file:
-                    json_content = json.load(json_file)
-                # Diffuser à tous les clients connectés
-                await self.broadcast_message('python_execution_result', json_content)
-            else:
-                await client.send_message('python_execution_result', output="Error: JSON file not found")
-        except subprocess.TimeoutExpired:
-            await client.send_message('python_execution_result', output="Error: Command timed out")
-        except Exception as e:
-            await client.send_message('python_execution_result', output=f"Error: {str(e)}")
-
-    async def execute_new_game_script(self, client):
-        try:
-            # Construire le chemin absolu du script
-            script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/new_game.py'))
-            # Chemin du fichier JSON généré
-            output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
-            
-            # Exécuter le script sans arguments
-            result = subprocess.run(['python3', script_path], capture_output=True, text=True, timeout=30)
-            output = result.stdout + result.stderr
-            print(output)  # Debug: afficher la sortie de l'exécution
-
-            # Lire le fichier JSON généré
-            if os.path.exists(output_json_path):
-                with open(output_json_path, 'r') as json_file:
-                    json_content = json.load(json_file)
-                # Diffuser à tous les clients connectés
-                await self.broadcast_message('new_game_result', json_content)
-            else:
-                await client.send_message('new_game_result', output="Error: JSON file not found")
-        except subprocess.TimeoutExpired:
-            await client.send_message('new_game_result', output="Error: Command timed out")
-        except Exception as e:
-            await client.send_message('new_game_result', output=f"Error: {str(e)}")
-        
-    async def broadcast_message(self, kind: str, content: Any):
-        message = {'kind': kind, 'output': content}
-        for client in self._connected_clients.values():
-            await client.send_message(kind, output=content)
-
-    def nonify_exception(func):
-            try:
-                return func()
-            except:
-                return None
-
-    
     async def _background_tasks(self, app):
         # inspired from https://docs.aiohttp.org/en/stable/web_advanced.html#background-tasks
         
@@ -469,12 +408,73 @@ class ChatServer(object):
         await asyncio.gather(*[x.manager_task for x in self._chat_sessions.values()])
         logger.info("Chat sessions stopped.")
 
+        
+    async def execute_python_script(self, client, command):
+            try:
+                # Construire le chemin absolu du script
+                script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/add_word.py'))
+                # Chemin du fichier JSON généré
+                output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
+
+                # Exécuter le script avec le message comme argument
+                result = subprocess.run(['python3', script_path, command], capture_output=True, text=True, timeout=10)
+                output = result.stdout + result.stderr
+                
+                # Lire le fichier JSON généré
+                if os.path.exists(output_json_path):
+                    with open(output_json_path, 'r') as json_file:
+                        json_content = json.load(json_file)
+                    # Diffuser à tous les clients connectés
+                    await self.broadcast_message('python_execution_result', json_content)
+                else:
+                    await client.send_message('python_execution_result', output="Error: JSON file not found")
+            except subprocess.TimeoutExpired:
+                await client.send_message('python_execution_result', output="Error: Command timed out")
+            except Exception as e:
+                await client.send_message('python_execution_result', output=f"Error: {str(e)}")
+
+    async def execute_new_game_script(self, client):
+        try:
+            # Construire le chemin absolu du script
+            script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/new_game.py'))
+            # Chemin du fichier JSON généré
+            output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
+            
+            print(f"Executing script: {script_path}")  # Debug
+            print(f"Expected output JSON path: {output_json_path}")  # Debug
+
+            # Exécuter le script sans arguments
+            result = subprocess.run(['python3', script_path], capture_output=True, text=True)
+            output = result.stdout + result.stderr
+            print(f"Script output: {output}")  # Debug: afficher la sortie de l'exécution
+
+            # Lire le fichier JSON généré
+            if os.path.exists(output_json_path):
+                print("JSON file found")  # Debug
+                with open(output_json_path, 'r') as json_file:
+                    json_content = json.load(json_file)
+                # Diffuser à tous les clients connectés
+                await self.broadcast_message('new_game_result', json_content)
+            else:
+                print("JSON file not found")  # Debug
+                await client.send_message('new_game_result', output="Error: JSON file not found")
+        except subprocess.TimeoutExpired:
+            await client.send_message('new_game_result', output="Error: Command timed out")
+        except Exception as e:
+            await client.send_message('new_game_result', output=f"Error: {str(e)}")
+
+            
+    async def broadcast_message(self, kind: str, content: Any):
+            message = {'kind': kind, 'output': content}
+            for client in self._connected_clients.values():
+                await client.send_message(kind, output=content)  
+
     def run(self):
         app = web.Application()
         app.cleanup_ctx.append(self._background_tasks)
         app.router.add_route('GET', '/chat', self._websocket_handler)
         logger.info(f"Starting server on {self.interface}:{self.port}")
-        web.run_app(app, host=self.interface, port=self.port, shutdown_timeout=0.1)
+        web.run_app(app, host=self.interface, port=self.port, shutdown_timeout=100)
 
 
 def main(args):

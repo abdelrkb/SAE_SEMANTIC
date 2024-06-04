@@ -1,15 +1,11 @@
 Mots de départ :
-sucre,1829246
-blés,19349170
+curry,11350967
+montagnes,3829597
 Liste des mots :
-sucre, offset: 1829246
-blés, offset: 19349170
-sucré, offset: 10337628
-soluble, offset: 19691163
+curry, offset: 11350967
+montagnes, offset: 3829597
+faire, offset: 45884
 Distance entre les mots :
-sucre-blés, distance: 26.14
-sucre-sucré, distance: 55.79
-blés-sucré, distance: 24.89
-sucre-soluble, distance: 48.82
-blés-soluble, distance: 33.55
-sucré-soluble, distance: 28.23
+curry-montagnes, distance: 22.26
+curry-faire, distance: 35.43
+montagnes-faire, distance: 40.00
