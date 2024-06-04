@@ -1,0 +1,9 @@
+Score: 33.54999923706055
+Mots de départ :
+sucre
+blés
+Distance entre les mots :
+sucre_soluble, distance: 48.82
+blés_soluble, distance: 33.55
+Mots bannis:
+sucré

@@ -5,7 +5,7 @@ import subprocess
 
 # Fonction pour obtenir un mot aléatoire dans la liste des mots disponibles.
 def get_random_word(exclude=[]):
-    with open('game/Liste_mots.txt') as f:
+    with open('../game/Liste_mots.txt') as f:
         content = f.read()
         words = content.split(';')  # Diviser le contenu en utilisant le point-virgule comme séparateur
     word = random.choice(words).strip()
@@ -15,7 +15,7 @@ def get_random_word(exclude=[]):
 
 # Fonction pour vérifier si un mot existe dans le lexique.
 def word_exists_in_lexicon(word):
-    command = ['game/C/bin/dictionary_lookup', 'game/C/arbre_lexicographique.lex', word]
+    command = ['../game/C/bin/dictionary_lookup', '../game/C/arbre_lexicographique.lex', word]
     result = subprocess.run(command, capture_output=True, text=True)
     print(result)
     return result.stdout.strip() != "-1"  # Vérifier la sortie pour déterminer si le mot existe
@@ -59,6 +59,9 @@ def read_game_data(file_path):
 
 # Fonction pour démarrer le jeu.
 def start_game():
+    # Changer de répertoire pour s'assurer que le script s'exécute dans le bon répertoire
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    
     # Générer les mots aléatoires
     print("Generating random words...")
     mot1 = get_random_word()
@@ -66,30 +69,41 @@ def start_game():
     print(f"Generated words: {mot1}, {mot2}")
 
     # Exécuter le programme C
-    c_command = f'./game/C/bin/new_game game/C/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin game/C/arbre_lexicographique.lex game/partie {mot1} {mot2} multi'
+    c_command = f'../game/C/bin/new_game ../game/C/frWac_non_lem_no_postag_no_phrase_200_cbow_cut100.bin ../game/C/arbre_lexicographique.lex ../game/partie {mot1} {mot2} multi'
     print(f"Executing command: {c_command}")
-    os.system(c_command)
-    print("C program execution completed.")
+    result = subprocess.run(c_command, shell=True, capture_output=True, text=True)
+    print(f"C program execution completed with exit code {result.returncode}.")
+    print(f"STDOUT: {result.stdout}")
+    print(f"STDERR: {result.stderr}")
+    print(f"Expected result file path: {os.path.abspath('../game/partie/resultjava_multi.txt')}")
+
+    # Vérifier si le fichier de résultat existe
+    if not os.path.exists('../game/partie/resultjava_multi.txt'):
+        raise FileNotFoundError("Result file not found after C program execution")
 
     # Exécuter la commande Java pour traiter les résultats
-    result_java_file = f'./game/partie/resultjava_multi.txt'
-    game_data_file = f'./game/partie/game_data_multi.txt'
+    result_java_file = f'../game/partie/resultjava_multi.txt'
+    game_data_file = f'../game/partie/game_data_multi.txt'
     with open(result_java_file, 'w') as result_file:
         pass  # Just to create the file with the correct permissions
 
-    java_command = f'../../jdk-21.0.3/bin/java -cp game/java/target/classes sae.Main {result_java_file} {game_data_file} 2>&1'
-    os.system(java_command)
+    java_command = f'../../../jdk-21.0.3/bin/java -cp ../game/java/target/classes sae.Main {result_java_file} {game_data_file} 2>&1'
+    print(f"Executing Java command: {java_command}")
+    result = subprocess.run(java_command, shell=True, capture_output=True, text=True)
+    print(f"Java program execution completed with exit code {result.returncode}.")
+    print(f"STDOUT: {result.stdout}")
+    print(f"STDERR: {result.stderr}")
+    print(f"Expected game data file path: {os.path.abspath(game_data_file)}")
 
-    # Lire le fichier de résultat généré par le programme C
-    game_data_file = f"./game/partie/game_data_multi.txt"
+    # Vérifier si le fichier de données du jeu existe
     if not os.path.exists(game_data_file):
-        raise FileNotFoundError("Game data file not found")
+        raise FileNotFoundError("Game data file not found after Java program execution")
     print(f"Reading game data from: {game_data_file}")
 
     game_data = read_game_data(game_data_file)
 
     # Écrire les données dans un fichier JSON
-    result_json_file = f"./game_data_multi.json"
+    result_json_file = os.path.abspath(os.path.join(os.path.dirname(__file__), '../websockete/backend/game_data_multi.json'))
     with open(result_json_file, 'w') as json_file:
         json.dump(game_data, json_file, ensure_ascii=False, indent=4)
 
