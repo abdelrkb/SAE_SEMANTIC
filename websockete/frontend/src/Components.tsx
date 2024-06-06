@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './main.css';
 import WordGraph from './WordGraph';
+import CurrentScore from './CurrentScore';
 
 export interface WaitingRoom {
     name: string;
@@ -13,6 +14,7 @@ export interface Message {
     timestamp: number;
     content: string;
 }
+
 export interface PythonResultDisplayerProps {
     result: any;
 }
@@ -32,19 +34,19 @@ const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom: (usern
             <div>
                 {props.rooms.map(room => (
                     <div key={room.name}>
-                        <input 
-                            type="radio" 
-                            name="room" 
-                            value={room.name} 
-                            checked={selectedRoom === room.name} 
-                            onChange={() => setSelectedRoom(room.name)} 
-                        />              
+                        <input
+                            type="radio"
+                            name="room"
+                            value={room.name}
+                            checked={selectedRoom === room.name}
+                            onChange={() => setSelectedRoom(room.name)}
+                        />
                     </div>
                 ))}
             </div>
-            <button 
-                className="btn-green" 
-                onClick={() => props.onChosenRoom(pseudoFromUrl, selectedRoom)} 
+            <button
+                className="btn-green"
+                onClick={() => props.onChosenRoom(pseudoFromUrl, selectedRoom)}
                 disabled={pseudoFromUrl === "" || selectedRoom === "" || props.rooms.findIndex(x => x.name === selectedRoom) === -1}
             >
                 Rejoindre la salle d'attente
@@ -69,11 +71,21 @@ export const RoomWaiter = (props: { roomName: string, startTimestamp: number, on
 }
 
 export const ChatMessageDisplayer = (props: { message: Message }) => {
-    const isUserMessage = props.message.sender === 'admin'; // or any logic to differentiate
+    const isWordInsertion = props.message.content.startsWith('!');
+    const formattedContent = isWordInsertion 
+        ? `${props.message.sender} a essayé d'insérer le mot : ${props.message.content.substring(1)}` 
+        : props.message.content;
+
+    const messageClass = props.message.sender === 'admin'
+        ? 'UserMessage'
+        : isWordInsertion
+        ? 'WordInsertionMessage'
+        : 'TextMessage';
+    
     return (
-        <div className={`ChatMessageDisplayer ${isUserMessage ? 'UserMessage' : 'TextMessage'}`}>
-            <div className="MessageSender">{props.message.sender}</div>
-            <div className="MessageContent">{props.message.content}</div>
+        <div className={`ChatMessageDisplayer ${messageClass}`}>
+            <div>{props.message.sender}</div>
+            <div style={{ flex: 1 }}>{formattedContent}</div>
         </div>
     );
 }
@@ -91,15 +103,16 @@ export const ChatMessagesDisplayer = (props: { messages: Message[] }) => {
 export const MessageSender = (props: { onMessageWritten: (content: string) => void }) => {
     const [content, setContent] = React.useState("");
     return <div className="MessageSender">
-        <input 
-            type="text" 
-            value={content} 
-            className="transparent-input" 
-            onChange={event => setContent(event.target.value)} 
+        <input
+            type="text"
+            value={content}
+            className="transparent-input"
+            onChange={event => setContent(event.target.value)}
         />
         <button className="btn-green" onClick={() => { props.onMessageWritten(content); setContent('') }}>Envoyer</button>
     </div>;
 }
+
 
 export const ChatSession = (props: {
     messages: Message[],
@@ -108,16 +121,21 @@ export const ChatSession = (props: {
     onLeaving: () => void,
     onClosing: () => void,
     onNewGame: () => void,
-    onEndGame: () => void
+    onEndGame: () => void,
+    currentTurn: string,
+    userName: string
 }) => {
     return (
         <div className="ChatSession">
             <ChatMessagesDisplayer messages={props.messages} />
             {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
             <div className="ButtonContainer">
-                <button className="btn-green" onClick={props.onNewGame}>Nouvelle Partie</button>
+                <button className="btn-green" onClick={props.onNewGame}>Nouvelle partie</button>
                 <button className="btn-red" onClick={() => props.onLeaving()} disabled={!props.active}>Quitter le chat de partie</button>
                 <button className="btn-red" onClick={props.onEndGame}>Fin de la partie</button>
+            </div>
+            <div className="CurrentTurn">
+                {props.currentTurn === props.userName ? "C'est votre tour!" : `Tour de ${props.currentTurn}`}
             </div>
         </div>
     );
@@ -138,6 +156,9 @@ export const ChatManager = (props: { socketUrl: string }) => {
     const [waitingRooms, setWaitingRooms] = React.useState<WaitingRoom[]>([]);
     const [pythonResult, setPythonResult] = React.useState<any>(null);
     const [graphKey, setGraphKey] = React.useState<string>('initial');
+    const [currentScore, setCurrentScore] = React.useState<string>("");
+    const [currentTurn, setCurrentTurn] = React.useState<string>("");
+
     const pseudoFromUrl = getQueryParam('pseudo') || "";
 
     const onNewSocketMessage = (kind: string, content: Record<string, any>) => {
@@ -206,16 +227,31 @@ export const ChatManager = (props: { socketUrl: string }) => {
             case 'new_game_result':
                 setPythonResult(content.output);
                 setGraphKey(`graph_${Date.now()}`);
+                if (content.output && content.output.Distances) {
+                    const minDistance = Math.min(...Object.values(content.output.Distances).map((value: any) => parseFloat(value.toString())));
+                    setCurrentScore(minDistance.toString());
+                }
+                break;
+
+            case 'turn_update':
+                setCurrentTurn(content.current_turn_client);
+                break;
+
+            case 'not_your_turn':
+                addChatMessage('admin', content.content);
                 break;
     
             case 'server_shutdown':
                 setError('Server will shutdown now! Please reconnect later.');
                 break;
                 
-            case 'game_ended':
-                // Handle game ended logic here
-                window.location.href = 'SAE_SEMANTIC/home.php';  // Redirect to home.php
-                break;
+                case 'game_ended':
+                    // Handle game ended logic here
+                    const pseudoFromUrl = getQueryParam('pseudo') || "";
+                    const tokenFromUrl = getQueryParam('token') || "";
+                    const redirectUrl = 'http://localhost:3000/?pseudo=' + pseudoFromUrl + '&token=' + tokenFromUrl;
+                    window.location.replace(redirectUrl);  // Redirect to home.php with absolute URL
+                    break;
     
             default:
                 setError(`Received non-understandable message: kind=${kind} content=${JSON.stringify(content)}`);
@@ -273,6 +309,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
             const newSocket = new WebSocket(props.socketUrl);
             setSocket(newSocket);
             newSocket.addEventListener('open', (event) => {
+                console.debug("WebSocket connection opened", event);
                 setChatState({ roomSelection: true });
             });
             newSocket.addEventListener('message', (event) => {
@@ -283,8 +320,10 @@ export const ChatManager = (props: { socketUrl: string }) => {
                     try {
                         json = JSON.parse(data);
                         kind = json['kind'];
-                    } catch {
+                        console.debug("WebSocket message received", json);
+                    } catch (error) {
                         console.error("Received invalid JSON", data);
+                        setError(`Received invalid JSON: ${data}`);
                     }
                     if (json !== null && kind !== null)
                         onNewSocketMessage(kind, json);
@@ -293,11 +332,12 @@ export const ChatManager = (props: { socketUrl: string }) => {
             newSocket.addEventListener('error', (event) => {
                 console.error("WebSocket error", event);
                 setChatState({ disconnected: true });
-                setError(`Websocket connection error: ${event}`);
+                setError(`WebSocket connection error: ${event}`);
             });
             newSocket.addEventListener('close', (event) => {
                 console.error("WebSocket closed", event);
                 setChatState({ disconnected: true });
+                setError(`WebSocket connection closed: ${event.code} ${event.reason}`);
             });
             return () => {
                 newSocket.close();
@@ -309,7 +349,7 @@ export const ChatManager = (props: { socketUrl: string }) => {
 
     return <div className="ChatGraphContainer">
         <div className="ChatManager">
-        <h1> Chat de jeu</h1>
+            <h1> Chat de jeu</h1>
 
             {error !== '' &&
                 <div className="Error">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
@@ -327,10 +367,12 @@ export const ChatManager = (props: { socketUrl: string }) => {
             {'waitingRoomName' in chatState &&
                 <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />}
             {'messages' in chatState &&
-                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} onNewGame={executeNewGame} onEndGame={endGame} />}
+                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} onNewGame={executeNewGame} onEndGame={endGame} currentTurn={currentTurn} userName={pseudoFromUrl} />}
         </div>
-        {pythonResult && <div className="WordGraphContainer">         
-        
-        <WordGraph key={graphKey} data={pythonResult} /></div>}
+        {pythonResult && 
+        <div className="WordGraphContainer">         
+            <CurrentScore score={currentScore} />
+            <WordGraph key={graphKey} data={pythonResult} />
+        </div>}
     </div>;
 }

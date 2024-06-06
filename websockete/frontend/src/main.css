@@ -80,35 +80,38 @@ body {
   flex-direction: column;
 }
 
+.ChatMessagesDisplayer {
+  flex: 1;
+  overflow-y: auto; /* Ajout de défilement vertical */
+}
+
 .ChatMessageDisplayer {
   display: flex;
-  flex-direction: column; /* Column layout for messages */
+  flex-direction: column;
   padding: 10px;
   margin-bottom: 10px;
   border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.5); /* Couleur de fond par défaut */
 }
 
-.ChatMessageDisplayer {
-  display: flex;
-  flex-direction: row;
-  column-gap: 10px;
+.ChatMessageDisplayer.UserMessage {
+  background-color: rgba(255, 255, 0, 0.2); /* Fond jaune clair pour les messages des utilisateurs */
+  border-left: 4px solid #ffd700; /* Bordure dorée pour les messages des utilisateurs */
+}
+
+.ChatMessageDisplayer.TextMessage {
+  background-color: rgba(0, 0, 0, 0.5); /* Fond foncé pour les messages réguliers */
+  border-left: 4px solid #00bcd4; /* Bordure cyan pour les messages réguliers */
 }
 
 .MessageSender {
-  font-weight: bold; /* Bold text for the sender's name */
-  margin-bottom: 5px; /* Spacing below the sender's name */
+  display: flex;
+  flex-direction: row;
 }
 
-.UserMessage {
-  background-color: rgba(255, 255, 0, 0.2); /* Light yellow background for user messages */
-  color: #fff; /* Text color */
-  border-left: 4px solid #ffd700; /* Gold border to highlight user messages */
-}
-
-.TextMessage {
-  background-color: rgba(0, 0, 0, 0.5); /* Dark background for regular messages */
-  color: #fff; /* Text color */
-  border-left: 4px solid #00bcd4; /* Cyan border for regular messages */
+.WordInsertionMessage {
+  background-color: rgba(255, 165, 0, 0.2); /* Fond orange clair pour les messages d'insertion */
+  border-left: 4px solid #ffa500; /* Bordure orange pour les messages d'insertion */
 }
 
 .ChatGraphContainer {
@@ -131,6 +134,7 @@ body {
   grid-column: 2 / 3; /* Position in the second column */
   overflow-y: auto; /* Allow scrolling if the content is too tall */
   display: flex;
+  flex-direction: column; /* Stack children vertically */
   align-items: center;
   justify-content: center;
   background: linear-gradient(-45deg, #000000, #434343, #000000);
@@ -202,4 +206,26 @@ body {
 
 .hidden-input {
   display: none; /* Cache l'input */
+}
+
+/*score*/
+
+.CurrentScore {
+  margin-bottom: 20px; /* Space below the score container */
+  color: #fff; /* Text color */
+  padding: 20px; /* Padding for better spacing */
+  text-align: center; /* Center the text */
+}
+
+.ScoreValue {
+  font-size: 2rem; /* Larger font for the score */
+  margin-top: 10px; /* Spacing above the score */
+}
+
+.CurrentTurn {
+  margin-top: 10px;
+  color: #ffa500; /* Texte orange pour le tour actuel */
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
 }

@@ -31,14 +31,22 @@ const WordGraph: React.FC<WordGraphProps> = ({ data }) => {
           radius: 10,
           fillColor: '#87CEEB', // Bleu ciel
           lineWidth: 2,
-          lineColor: '#C0C0C0'
+          lineColor: '#C0C0C0',
+          states: {
+            hover: {
+              radius: 15,
+              lineWidth: 3,
+              fillColor: '#1E90FF' // Bleu dodger
+            }
+          }
         },
         dataLabels: {
           enabled: true,
           format: '{point.name}', // Afficher le nom sur les nœuds
           style: {
-            color: '#000000',
-            textOutline: 'none'
+            color: '#FFFFFF', // Blanc
+            textOutline: 'none',
+            fontSize: '17px'
           },
           allowOverlap: true
         }
@@ -49,7 +57,9 @@ const WordGraph: React.FC<WordGraphProps> = ({ data }) => {
         return {
           from,
           to,
-          weight: parseFloat(value)
+          weight: parseFloat(value),
+          color: '#B0C4DE', // Bleu clair
+          width: 2
         };
       });
 
@@ -57,10 +67,14 @@ const WordGraph: React.FC<WordGraphProps> = ({ data }) => {
         chart: {
           type: 'networkgraph',
           plotBorderWidth: 0,
-          animation: true
+          animation: true,
+          backgroundColor: 'transparent'
         },
         title: {
-          text: ''
+          text: '',
+          style: {
+            display: 'none'
+          }
         },
         plotOptions: {
           networkgraph: {
@@ -71,8 +85,23 @@ const WordGraph: React.FC<WordGraphProps> = ({ data }) => {
               integration: 'verlet'
             },
             link: {
+              color: '#C0C0C0',
               width: 2,
-              color: '#C0C0C0'
+              states: {
+                hover: {
+                  color: '#FF6347', // Tomate
+                  width: 3
+                }
+              },
+              dataLabels: {
+                enabled: true,
+                format: '{point.weight}', // Afficher le poids sur les liens
+                style: {
+                  fontSize: '15px',
+                  fontWeight: 'normal',
+                  color: '#FFFFFF' // Blanc
+                }
+              }
             }
           }
         },
@@ -85,8 +114,9 @@ const WordGraph: React.FC<WordGraphProps> = ({ data }) => {
             enabled: true,
             format: '{point.weight}', // Afficher le poids sur les liens
             style: {
-              fontSize: '0.8rem',
-              fontWeight: 'normal'
+              fontSize: '12px',
+              fontWeight: 'normal',
+              color: '#FFFFFF' // Blanc
             }
           },
           data: links,
@@ -99,7 +129,7 @@ const WordGraph: React.FC<WordGraphProps> = ({ data }) => {
               enabled: true,
               format: '{point.name}', // Afficher le nom sur les nœuds
               style: {
-                color: '#000000',
+                color: '#FFFFFF', // Blanc
                 textOutline: 'none'
               },
               allowOverlap: true
@@ -117,7 +147,7 @@ const WordGraph: React.FC<WordGraphProps> = ({ data }) => {
   }
 
   return (
-    <div>
+    <div className="HighchartsContainer">
       {chartOptions && (
         <HighchartsReact
           highcharts={Highcharts}

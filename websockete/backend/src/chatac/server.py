@@ -51,6 +51,7 @@ it is up to you to adapt it for you real needs with custom hooks! Good luck!
 """
 
 import asyncio, logging, os, sys, json, time, subprocess
+import traceback
 from aiohttp import web, WSMsgType, WSCloseCode, ClientConnectionError
 import aiohttp
 from typing import Dict, Any, List
@@ -93,7 +94,7 @@ class WaitingRoom(object):
         self.attendee_number = info.get('attendee_number', 2)
         self.description = info.get('description', '')
         self._condition = asyncio.Condition()
-        self._queue = [] # queue where the clients wait (we specify the ids of the clients)
+        self._queue = []
         self.manager_task: Optional[Task] = None
 
     def __str__(self):
@@ -104,7 +105,7 @@ class WaitingRoom(object):
             self._queue.append(client_id)
             self._condition.notify()
 
-    async def cancel_client_id(self, client_id):
+    async def cancel_client_id(self, client_id: int):
         async with self._condition:
             try:
                 self._queue.remove(client_id)
@@ -113,9 +114,8 @@ class WaitingRoom(object):
 
     async def wait_for_attendees(self):
         async with self._condition:
-            # we wait until we have the expected number of attendees
             await self._condition.wait_for(lambda: len(self._queue) >= self.attendee_number)
-            attendee_ids = self._queue[0:self.attendee_number]
+            attendee_ids = self._queue[:self.attendee_number]
             self._queue = self._queue[self.attendee_number:]
             return attendee_ids
 
@@ -123,16 +123,29 @@ class WaitingRoom(object):
 
 class ChatSession(object):
     _COUNTER = 0  # for a unique id for each chat session
-    def __init__(self, clients):
+    def __init__(self, clients, hooks, server):
         self.id = ChatSession._COUNTER
         ChatSession._COUNTER += 1
         self.clients = clients
+        self.hooks = hooks
+        self.server = server
         self.deadline = None
         self.welcome_message = None
-        self.manager_task: Optional[Task] = None  # to be set by the manager
+        self.manager_task: Optional[Task] = None
 
         self._chat_message_queue = asyncio.Queue()  # queue for chat messages to be sent
         self._leave_queue = asyncio.Queue()  # queue for attendees that want to leave
+
+        self.turn_index = 0  # Initialiser l'index du tour
+
+    def get_current_turn_client(self):
+        client_ids = list(self.clients.keys())
+        return self.clients[client_ids[self.turn_index]]
+
+    async def next_turn(self):
+        self.turn_index = (self.turn_index + 1) % len(self.clients)
+        current_turn_client = self.get_current_turn_client()
+        await self.send_message(None, 'turn_update', current_turn_client=current_turn_client.identity.get('name'))
 
     def not_empty_message_queue(self):
         return not self._chat_message_queue.empty()
@@ -141,6 +154,19 @@ class ChatSession(object):
         message = {'kind': kind, 'addressees': addressees}
         message.update(**kwargs)
         await self._chat_message_queue.put(message)
+
+    async def handle_chat_message(self, client, content):
+        if content.startswith('!'):
+            if client != self.get_current_turn_client():
+                await self.put_in_message_queue([client.id], 'not_your_turn', content="vous avez essayé d'insérer un mot mais ce n'est pas à votre tour de jouer")
+            else:
+                command = content[1:]
+                await self.server.execute_python_script(client, command)
+                await self.next_turn()
+        else:
+            to_send = await self.hooks.on_chat_message(self.id, client.id, content)
+            for (addressee_id, body) in to_send.items():
+                await self.put_in_message_queue([addressee_id], 'chat_message_received', sender=client.identity.get('name'), content=body)
 
     async def get_next_message(self):
         return await self._chat_message_queue.get()
@@ -182,6 +208,25 @@ class ChatSession(object):
             client.state = 'connected' 
         await self.send_message(None, 'chat_session_ended', exit_message=exit_message)
 
+    async def execute_python_script(self, client, command):
+        try:
+            script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/add_word.py'))
+            output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
+
+            result = subprocess.run(['python3', script_path, command], capture_output=True, text=True, timeout=10)
+            output = result.stdout + result.stderr
+            
+            if os.path.exists(output_json_path):
+                with open(output_json_path, 'r') as json_file:
+                    json_content = json.load(json_file)
+                await self.broadcast_message('python_execution_result', json_content)
+            else:
+                await client.send_message('python_execution_result', output="Error: JSON file not found")
+        except subprocess.TimeoutExpired:
+            await client.send_message('python_execution_result', output="Error: Command timed out")
+        except Exception as e:
+            await client.send_message('python_execution_result', output=f"Error: {str(e)}")
+
 
 class ChatServer(object):
     def __init__(self, interface: str, port: int, hooks: ChatHooks, hooks_params: Any):
@@ -195,15 +240,12 @@ class ChatServer(object):
         self._chat_sessions = {}
 
     async def _waiting_room_manager(self, waiting_room: WaitingRoom):
-        """
-        This coroutine is executed to manage the waiting room
-        """
         logger.info(f"Starting the waiting room manager for room {waiting_room}")
         try:
             while True:
                 attendee_ids = await waiting_room.wait_for_attendees()
                 attendees = {x: self._connected_clients.get(x) for x in attendee_ids}
-                chat_session = ChatSession(attendees)
+                chat_session = ChatSession(attendees, self.hooks, self)  # Pass the server instance
                 chat_session_params = await self.hooks.on_chat_session_start(waiting_room.name, chat_session.id, {id: x.identity for (id, x) in attendees.items()})
                 chat_session.deadline = time.monotonic() + chat_session_params['duration']
                 chat_session.welcome_message = chat_session_params.get('welcome_message', '')
@@ -213,8 +255,8 @@ class ChatServer(object):
         except asyncio.CancelledError:
             pass
         except Exception as e:
-            import traceback
-            traceback.print_exc()
+            logger.error(f"Error in waiting room manager: {waiting_room.name}")
+            logger.error(traceback.format_exc())
         finally:
             logger.info(f"The waiting room manager for {waiting_room.name} is terminated")
 
@@ -262,10 +304,6 @@ class ChatServer(object):
             logger.info(f"The chat session manager for {chat_session} is ended.")
 
     async def _websocket_handler(self, request):
-        """
-        This coroutine is executed to manage each websocket (one instance by client)
-        """
-        # we upgrade from a standard HTTP request to the websocket protocol
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         client = Client(ws)
@@ -276,88 +314,83 @@ class ChatServer(object):
             return {k: {
                     'attendee_number': v.attendee_number, 
                     'description': v.description} for (k, v) in self._waiting_rooms.items() }
-        
+            
         try:
-            # send the waiting room list
-            await client.send_message('waiting_room_list', waiting_rooms = get_waiting_rooms_desc())
+            await client.send_message('waiting_room_list', waiting_rooms=get_waiting_rooms_desc())
 
-            # we manage each message
             async for msg in ws:
                 if msg.type == WSMsgType.TEXT:
-                    decoded_msg = nonify_exception(lambda: json.loads(msg.data))
-                    msg_kind = nonify_exception(lambda: decoded_msg['kind'])
-
-                    if decoded_msg is None:
+                    try:
+                        decoded_msg = json.loads(msg.data)
+                        msg_kind = decoded_msg['kind']
+                        logger.info(f"Received message kind: {msg_kind}, content: {decoded_msg}")
+                    except Exception as e:
+                        logger.error(f"Failed to decode message: {msg.data}")
+                        logger.error(traceback.format_exc())
                         await client.send_message('json_invalid')
-                    elif msg_kind is None:
-                        await client.send_message('message_kind_absent')
-                    else:
-                        if msg_kind == 'execute_python':
-                            command = decoded_msg.get('command', '')
-                            if command:
-                                await self.execute_python_script(client, command)
-                            else:
-                                await client.send_message('command_invalid')
-                        elif msg_kind == 'new_game':
-                            await self.execute_new_game_script(client)
-                        elif msg_kind == 'end_game':
-                            await self.end_game(client)
-                        elif msg_kind == 'join_waiting_room':
-                            waiting_room_name = str(decoded_msg.get('waiting_room_name', '')).strip()
-                            token = str(decoded_msg.get('token', '')).strip()
-                            if not waiting_room_name or waiting_room_name not in self._waiting_rooms:
-                                await client.send_message('waiting_room_name_invalid')
-                            elif not token:
-                                await client.send_message('token_empty')
-                            elif client.state not in ('connected', 'waiting'):
-                                await client.send_message('state_invalid', state=client.state)
-                            else:
-                                client_identity = await self.hooks.on_client_connection(waiting_room_name, token)
-                                if not isinstance(client_identity, dict):
-                                    await client.send_message('waiting_room_join_refused', reason=str(client_identity))
-                                else:
-                                    waiting_room = self._waiting_rooms[waiting_room_name]
-                                    if client.state == 'waiting':
-                                        await client.waiting_room.cancel_client_id(client.id)
-                                    client.identity = client_identity
-                                    await waiting_room.queue_client_id(client.id)
-                                    client.state = 'waiting'
-                                    client.waiting_room = waiting_room
-                                    await client.send_message('in_waiting_room')
+                        continue
 
-                        elif msg_kind == 'leave_waiting_room':
-                            if client.state == 'waiting':
-                                wr = client.waiting_room
-                                await wr.cancel_client_id(client.id)
-                                client.state = 'connected'
-                                await client.send_message('waiting_room_left', 
-                                    waiting_room_name=wr.name)
-                            else:
-                                await client.send_message('state_invalid', state=client.state)
-                        
-                        elif msg_kind == 'send_chat_message':
-                            if client.chat_session:
-                                content = decoded_msg.get('content')
-                                if content:
-                                    to_send = await self.hooks.on_chat_message(client.chat_session.id, client.id, content)
-                                    for (addressee_id, body) in to_send.items():
-                                        await client.chat_session.put_in_message_queue([addressee_id], 'chat_message_received', sender=client.identity.get('name'), content=body)
-                                else:
-                                    await client.send_message('message_not_provided')
-                            else:
-                                await client.send_message('not_chatting')
-                        
-                        elif msg_kind == 'leave_chat_session':
-                            if client.chat_session:
-                                await client.chat_session.put_in_leave_queue(client)
-                            else:
-                                await client.send_message('state_invalid', state=client.state)
-
+                    if msg_kind == 'execute_python':
+                        command = decoded_msg.get('command', '')
+                        if command:
+                            await self.execute_python_script(client, command)
                         else:
-                            await client.send_message('message_kind_not_understood')
+                            await client.send_message('command_invalid')
+                    elif msg_kind == 'new_game':
+                        await self.execute_new_game_script(client)
+                    elif msg_kind == 'end_game':
+                        await self.end_game(client)
+                    elif msg_kind == 'join_waiting_room':
+                        waiting_room_name = str(decoded_msg.get('waiting_room_name', '')).strip()
+                        token = str(decoded_msg.get('token', '')).strip()
+                        if not waiting_room_name or waiting_room_name not in self._waiting_rooms:
+                            await client.send_message('waiting_room_name_invalid')
+                        elif not token:
+                            await client.send_message('token_empty')
+                        elif client.state not in ('connected', 'waiting'):
+                            await client.send_message('state_invalid', state=client.state)
+                        else:
+                            client_identity = await self.hooks.on_client_connection(waiting_room_name, token)
+                            if not isinstance(client_identity, dict):
+                                await client.send_message('waiting_room_join_refused', reason=str(client_identity))
+                            else:
+                                waiting_room = self._waiting_rooms[waiting_room_name]
+                                if client.state == 'waiting':
+                                    await client.waiting_room.cancel_client_id(client.id)
+                                client.identity = client_identity
+                                await waiting_room.queue_client_id(client.id)
+                                client.state = 'waiting'
+                                client.waiting_room = waiting_room
+                                await client.send_message('in_waiting_room')
+
+                    elif msg_kind == 'leave_waiting_room':
+                        if client.state == 'waiting':
+                            wr = client.waiting_room
+                            await wr.cancel_client_id(client.id)
+                            client.state = 'connected'
+                            await client.send_message('waiting_room_left', 
+                                waiting_room_name=wr.name)
+                        else:
+                            await client.send_message('state_invalid', state=client.state)
+                    elif msg_kind == 'send_chat_message':
+                        if client.chat_session:
+                            content = decoded_msg.get('content')
+                            if content:
+                                await client.chat_session.handle_chat_message(client, content)
+                            else:
+                                await client.send_message('message_not_provided')
+                        else:
+                            await client.send_message('not_chatting')
+                    elif msg_kind == 'leave_chat_session':
+                        if client.chat_session:
+                            await client.chat_session.put_in_leave_queue(client)
+                        else:
+                            await client.send_message('state_invalid', state=client.state)
+                    else:
+                        await client.send_message('message_kind_not_understood')
 
                 elif msg.type == WSMsgType.ERROR:
-                    logger.info(f"The websocket of {client} has been closed")
+                    logger.error(f"Websocket connection closed with error for {client}: {ws.exception()}")
                 else:
                     await client.send_message('message_invalid')
         except asyncio.CancelledError:
@@ -365,8 +398,8 @@ class ChatServer(object):
         except ClientConnectionError:
             logger.info(f"Connection error for client {client}")
         except Exception as e:
-            import traceback
-            traceback.print_exc()
+            logger.error(f"Unexpected error for client {client}")
+            logger.error(traceback.format_exc())
         finally:
             client.state = 'disconnected'
             if client.waiting_room is not None:
@@ -378,7 +411,7 @@ class ChatServer(object):
             except:
                 pass
             self._connected_clients.pop(client.id)
-            logger.info(f"The client {client} has leaved")
+            logger.info(f"The client {client} has left")
 
 
     async def _background_tasks(self, app):
@@ -410,28 +443,23 @@ class ChatServer(object):
 
         
     async def execute_python_script(self, client, command):
-            try:
-                # Construire le chemin absolu du script
-                script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/add_word.py'))
-                # Chemin du fichier JSON généré
-                output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
+        try:
+            script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../../api/add_word.py'))
+            output_json_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../game_data_multi.json'))
 
-                # Exécuter le script avec le message comme argument
-                result = subprocess.run(['python3', script_path, command], capture_output=True, text=True, timeout=10)
-                output = result.stdout + result.stderr
-                
-                # Lire le fichier JSON généré
-                if os.path.exists(output_json_path):
-                    with open(output_json_path, 'r') as json_file:
-                        json_content = json.load(json_file)
-                    # Diffuser à tous les clients connectés
-                    await self.broadcast_message('python_execution_result', json_content)
-                else:
-                    await client.send_message('python_execution_result', output="Error: JSON file not found")
-            except subprocess.TimeoutExpired:
-                await client.send_message('python_execution_result', output="Error: Command timed out")
-            except Exception as e:
-                await client.send_message('python_execution_result', output=f"Error: {str(e)}")
+            result = subprocess.run(['python3', script_path, command], capture_output=True, text=True, timeout=10)
+            output = result.stdout + result.stderr
+            
+            if os.path.exists(output_json_path):
+                with open(output_json_path, 'r') as json_file:
+                    json_content = json.load(json_file)
+                await self.broadcast_message('python_execution_result', json_content)
+            else:
+                await client.send_message('python_execution_result', output="Error: JSON file not found")
+        except subprocess.TimeoutExpired:
+            await client.send_message('python_execution_result', output="Error: Command timed out")
+        except Exception as e:
+            await client.send_message('python_execution_result', output=f"Error: {str(e)}")
 
     async def execute_new_game_script(self, client):
         try:
@@ -497,16 +525,16 @@ class ChatServer(object):
                         try:
                             response_data = await resp.json()
                             logger.info(f"Score submission response JSON: {response_data}")
-                            await client.send_message('game_ended', response=response_data)
+                            await client.send_message('game_ended', response=response_data, redirect_url='/SAE_SEMANTIC/home.php')
                         except json.JSONDecodeError:
                             logger.error("Failed to decode JSON response")
-                            await client.send_message('game_ended', response="Error: Failed to decode JSON response")
+                            await client.send_message('game_ended', response="Error: Failed to decode JSON response", redirect_url='/SAE_SEMANTIC/home.php')
             else:
                 logger.error("Game data JSON file not found")
-                await client.send_message('game_ended', response="Error: JSON file not found")
+                await client.send_message('game_ended', response="Error: JSON file not found", redirect_url='/SAE_SEMANTIC/home.php')
         except Exception as e:
             logger.error(f"Error ending game: {str(e)}")
-            await client.send_message('game_ended', response=f"Error: {str(e)}")
+            await client.send_message('game_ended', response=f"Error: {str(e)}", redirect_url='/SAE_SEMANTIC/home.php')
 
             
     async def broadcast_message(self, kind: str, content: Any):
