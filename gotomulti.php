@@ -19,7 +19,7 @@
         <div class="glassmorphism">
             <h1 class="title">Le mode multijoueur n'est pas disponible...</h1>
             <img src="img/sinje_triste.jpeg" alt="sinje_trist">
-            <p>Ce mode est en cours de développement, vous ne pouvez jouer qu'en mode solo malheuresement...</p>
+            <p>Ce mode est en cours de développement, vous ne pouvez jouer qu'en mode solo malheureusement...</p>
             <p>Mais revenez vite pour voir s'il est disponible !!!</p>
 
             <form action="openmulti.php" method="post">
