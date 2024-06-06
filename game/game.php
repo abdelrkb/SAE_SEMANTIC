@@ -149,9 +149,6 @@ $scoreRequest->closeCursor();
             </div>
         </div>
     </div>
-    <div class="div5">
-        <h1 class="title"><?php if ($erreur != 0) echo "Erreur : " . $messagesErreur[$erreur]; ?></h1>
-    </div>
     <?php
     if ($erreur != 0) {
         echo "<div id='adminToast' class='toast'><i class='fa-solid fa-circle-exclamation'></i>".$messagesErreur[$erreur]."</div>";

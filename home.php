@@ -10,7 +10,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["executeButton"])) {
     exec("echo 1", $output, $return_var);
     echo $output[0];
 }
-include_once('admin.php');
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -28,6 +27,9 @@ include_once('admin.php');
     <script src="https://kit.fontawesome.com/3f3ecfc27b.js" crossorigin="anonymous"></script>
 </head>
 <body class="black">
+    <?php
+    include_once('admin.php');
+    ?>
     <figure class="text-end">
         <img src="img/sinje_off.png" alt="Logo">
         <a class="btn btn-light" href="rules.php">Règles&emsp;<i class="fa-solid fa-scale-balanced"></i></a>
