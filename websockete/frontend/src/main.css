@@ -1,0 +1,205 @@
+/* Style pour le corps */
+body {
+  background: linear-gradient(-45deg, #000000, #434343, #000000);
+  color: #fff; /* Texte en blanc */
+  font-family: Arial, sans-serif;
+}
+
+.App {
+  text-align: center;
+  padding: 20px; /* Ajout de padding autour de l'application */
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.ChatContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ChatManager {
+  grid-column: 1 / 2;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  background: linear-gradient(-45deg, #000000, #434343, #000000);
+  color: #fff;
+  animation: Gradient 15s ease infinite;
+  display: flex;
+  flex-direction: column;
+}
+
+.Error {
+  background-color: red;
+}
+
+.Disconnected,
+.Connecting,
+.WaitingRoomSelector,
+.RoomWaiter {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ChatSession {
+  display: flex;
+  flex-direction: column;
+}
+
+.ChatMessageDisplayer {
+  display: flex;
+  flex-direction: column; /* Column layout for messages */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+}
+
+.ChatMessageDisplayer {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+}
+
+.MessageSender {
+  font-weight: bold; /* Bold text for the sender's name */
+  margin-bottom: 5px; /* Spacing below the sender's name */
+}
+
+.UserMessage {
+  background-color: rgba(255, 255, 0, 0.2); /* Light yellow background for user messages */
+  color: #fff; /* Text color */
+  border-left: 4px solid #ffd700; /* Gold border to highlight user messages */
+}
+
+.TextMessage {
+  background-color: rgba(0, 0, 0, 0.5); /* Dark background for regular messages */
+  color: #fff; /* Text color */
+  border-left: 4px solid #00bcd4; /* Cyan border for regular messages */
+}
+
+.ChatGraphContainer {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* Chat takes 1 part, graph takes 2 parts */
+  gap: 20px; /* Space between columns */
+  height: 100vh; /* Full height */
+}
+
+.ChatManager {
+  grid-column: 1 / 2; /* Position in the first column */
+  overflow-y: auto; /* Allow scrolling if the content is too tall */
+  background: linear-gradient(-45deg, #000000, #434343, #000000);
+  padding: 20px; /* Padding for better spacing */
+  border-radius: 10px; /* Rounded corners */
+  color: #fff; /* Text color */
+}
+
+.WordGraphContainer {
+  grid-column: 2 / 3; /* Position in the second column */
+  overflow-y: auto; /* Allow scrolling if the content is too tall */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(-45deg, #000000, #434343, #000000);
+  padding: 20px; /* Padding for better spacing */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.HeaderImageContainer {
+  display: flex;
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  margin-bottom: 10px; /* Espace sous l'image */
+}
+
+.HeaderImage {
+  width: 70px; /* Taille de l'image */
+}
+
+/* Style pour les boutons */
+.ButtonContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn-green {
+  background-color: #28a745; /* Couleur verte */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.btn-green:hover {
+  background-color: #218838;
+}
+
+.btn-red {
+  background-color: #dc3545; /* Couleur rouge */
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.btn-red:hover {
+  background-color: #c82333;
+}
+
+.transparent-input {
+  width : 97%;
+  background-color: transparent; /* Fond transparent */
+  color: white; /* Texte en blanc */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Bordure semi-transparente */
+  border-radius: 5px; /* Bordures arrondies */
+  padding: 10px; /* Padding pour un meilleur espacement */
+  flex: 1; /* Pour occuper tout l'espace disponible */
+}
+
+.transparent-input::placeholder {
+  color: rgba(255, 255, 255, 0.7); /* Placeholder en blanc semi-transparent */
+}
+
+.hidden-input {
+  display: none; /* Cache l'input */
+}
