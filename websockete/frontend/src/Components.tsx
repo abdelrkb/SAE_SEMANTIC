@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import './Components.css';
+import './main.css';
 import WordGraph from './WordGraph';
 
 export interface WaitingRoom {
@@ -24,20 +24,29 @@ export const getQueryParam = (param: string) => {
 
 const WaitingRoomSelector = (props: { rooms: WaitingRoom[], onChosenRoom: (username: string, waitingRoom: string) => void }) => {
     const pseudoFromUrl = getQueryParam('pseudo') || "";
-    const [selectedRoom, setSelectedRoom] = React.useState("");
+    const [selectedRoom, setSelectedRoom] = React.useState(props.rooms.length > 0 ? props.rooms[0].name : "");
 
     return (
         <div className="WaitingRoomSelector">
-            <div>Votre pseudo: <input type="text" value={pseudoFromUrl} disabled /></div>
+            <div><input type="text" value={pseudoFromUrl} disabled className="transparent-input" /></div>
             <div>
                 {props.rooms.map(room => (
                     <div key={room.name}>
-                        <input type="radio" name="room" value={room.name} checked={selectedRoom === room.name} onChange={() => setSelectedRoom(room.name)} />
-                        {room.name}@{room.attendeeNumber} ({room.description})
+                        <input 
+                            type="radio" 
+                            name="room" 
+                            value={room.name} 
+                            checked={selectedRoom === room.name} 
+                            onChange={() => setSelectedRoom(room.name)} 
+                        />              
                     </div>
                 ))}
             </div>
-            <button onClick={() => props.onChosenRoom(pseudoFromUrl, selectedRoom)} disabled={pseudoFromUrl === "" || selectedRoom === "" || props.rooms.findIndex(x => x.name === selectedRoom) === -1}>
+            <button 
+                className="btn-green" 
+                onClick={() => props.onChosenRoom(pseudoFromUrl, selectedRoom)} 
+                disabled={pseudoFromUrl === "" || selectedRoom === "" || props.rooms.findIndex(x => x.name === selectedRoom) === -1}
+            >
                 Rejoindre la salle d'attente
             </button>
         </div>
@@ -53,31 +62,42 @@ export const RoomWaiter = (props: { roomName: string, startTimestamp: number, on
         return () => clearTimeout(handle);
     }, []);
     return <div className="RoomWaiter">
-        <div>Waiting in room {props.roomName} for {Math.floor((currentTimestamp - props.startTimestamp) / 1000)} s.</div>
-        <div><button onClick={() => props.onLeaving()}>Leave the waiting room</button></div>
+        <div>En attente... {Math.floor((currentTimestamp - props.startTimestamp) / 1000)} s.</div>
+        <br></br>
+        <div><button className='btn-red' onClick={() => props.onLeaving()}>Quitter la file d'attente</button></div>
     </div>;
 }
 
 export const ChatMessageDisplayer = (props: { message: Message }) => {
-    const date = React.useMemo(() => new Date(props.message.timestamp).toLocaleTimeString(), [props.message.timestamp]);
-    return <div className="ChatMessageDisplayer">
-        <div>{date}</div>
-        <div>{props.message.sender}</div>
-        <div style={{ flex: 1 }}>{props.message.content}</div>
-    </div>;
+    const isUserMessage = props.message.sender === 'admin'; // or any logic to differentiate
+    return (
+        <div className={`ChatMessageDisplayer ${isUserMessage ? 'UserMessage' : 'TextMessage'}`}>
+            <div className="MessageSender">{props.message.sender}</div>
+            <div className="MessageContent">{props.message.content}</div>
+        </div>
+    );
 }
 
 export const ChatMessagesDisplayer = (props: { messages: Message[] }) => {
-    return <ol className="ChatMessagesDisplayer">
-        {props.messages.map((x, i) => <li key={i}><ChatMessageDisplayer message={x} /></li>)}
-    </ol>;
+    return (
+        <div className="ChatMessagesDisplayer">
+            {props.messages.map((message, index) => (
+                <ChatMessageDisplayer key={index} message={message} />
+            ))}
+        </div>
+    );
 }
 
 export const MessageSender = (props: { onMessageWritten: (content: string) => void }) => {
     const [content, setContent] = React.useState("");
     return <div className="MessageSender">
-        <input type="text" value={content} style={{ flex: 1 }} onChange={event => setContent(event.target.value)} />
-        <button onClick={() => { props.onMessageWritten(content); setContent('') }}>Envoyer</button>
+        <input 
+            type="text" 
+            value={content} 
+            className="transparent-input" 
+            onChange={event => setContent(event.target.value)} 
+        />
+        <button className="btn-green" onClick={() => { props.onMessageWritten(content); setContent('') }}>Envoyer</button>
     </div>;
 }
 
@@ -94,11 +114,10 @@ export const ChatSession = (props: {
         <div className="ChatSession">
             <ChatMessagesDisplayer messages={props.messages} />
             {props.active && <MessageSender onMessageWritten={props.onMessageWritten} />}
-            <div>
-                <button onClick={props.onNewGame}>Start New Game</button>
-                <button onClick={() => props.onLeaving()} disabled={!props.active}>Quitter le chat de partie</button>
-                <button onClick={() => props.onClosing()} disabled={props.active}>Fermer le chat de la partie</button>
-                <button onClick={props.onEndGame}>Fin de la partie</button> {/* Ajout du bouton */}
+            <div className="ButtonContainer">
+                <button className="btn-green" onClick={props.onNewGame}>Nouvelle Partie</button>
+                <button className="btn-red" onClick={() => props.onLeaving()} disabled={!props.active}>Quitter le chat de partie</button>
+                <button className="btn-red" onClick={props.onEndGame}>Fin de la partie</button>
             </div>
         </div>
     );
@@ -288,23 +307,30 @@ export const ChatManager = (props: { socketUrl: string }) => {
         }
     }, [connected, props.socketUrl]);
 
-    return <div className="ChatManager">
-        {error !== '' &&
-            <div className="Error">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
-        {'disconnected' in chatState &&
-            <div className="Disconnected">
-                <div>Déconnecté</div>
-                <button onClick={() => setChatState({ connecting: true })}>Se connecter</button></div>}
-        {'connecting' in chatState &&
-            <div className="Connecting">
-                <div>Connecting to server {props.socketUrl}</div>
-            </div>}
-        {'roomSelection' in chatState &&
-            <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />}
-        {'waitingRoomName' in chatState &&
-            <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />}
-        {'messages' in chatState &&
-            <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} onNewGame={executeNewGame} onEndGame={endGame} />}
-        {pythonResult && <WordGraph key={graphKey} data={pythonResult} />}
+    return <div className="ChatGraphContainer">
+        <div className="ChatManager">
+        <h1> Chat de jeu</h1>
+
+            {error !== '' &&
+                <div className="Error">Error: {error} <button onClick={() => setError('')}>OK</button></div>}
+            {'disconnected' in chatState &&
+                <div className="Disconnected">
+                    <div>Connectez vous au chat du jeu pour commencer à jouer</div>
+                    <br></br>
+                    <button className="btn-green" onClick={() => setChatState({ connecting: true })}>Se connecter</button></div>}
+            {'connecting' in chatState &&
+                <div className="Connecting">
+                    <div>Connecting to server {props.socketUrl}</div>
+                </div>}
+            {'roomSelection' in chatState &&
+                <WaitingRoomSelector rooms={waitingRooms} onChosenRoom={connectToWaitingRoom} />}
+            {'waitingRoomName' in chatState &&
+                <RoomWaiter roomName={chatState.waitingRoomName} startTimestamp={chatState.startTimestamp} onLeaving={leaveWaitingRoom} />}
+            {'messages' in chatState &&
+                <ChatSession messages={chatState.messages} active={chatState.active} onMessageWritten={sendChatMessage} onLeaving={leaveChatSession} onClosing={closeChatSession} onNewGame={executeNewGame} onEndGame={endGame} />}
+        </div>
+        {pythonResult && <div className="WordGraphContainer">         
+        
+        <WordGraph key={graphKey} data={pythonResult} /></div>}
     </div>;
 }
