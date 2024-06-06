@@ -94,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Contenu du mail
     $mail->isHTML(true);
     $mail->Subject = 'Confirmation d\'inscription';
-    $mail->Body = "Bienvenue $pseudo sur notre site !<br><br>Veuillez confirmer votre inscription en cliquant sur le lien suivant : <a href='http://perso-etudiant.u-pem.fr/~chamsedine.amouche/Projet-SAE/inscription/script-confirmermail.php?code=$code_confirmation'>Confirmer</a>";
+    $mail->Body = "Bienvenue $pseudo sur notre site !<br><br>Veuillez confirmer votre inscription en cliquant sur le lien suivant : <a href='http://perso-etudiant.u-pem.fr/~thamiz.sarboudine/Projet-SAE/inscription/script-confirmermail.php?code=$code_confirmation'>Confirmer</a>";
     $mail->CharSet = 'UTF-8';
     
     // Envoi du mail
