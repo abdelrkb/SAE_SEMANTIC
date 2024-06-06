@@ -1,5 +1,6 @@
 <?php
 include("../conf.bkp.php");
+include("../includes/fonctions.php");
 header('Content-Type: application/json');
 
 $data = json_decode(file_get_contents('php://input'), true);
@@ -27,7 +28,7 @@ if (isset($data['pseudo']) && isset($data['score'])) {
             $requestAddFinalScore->closeCursor();
 
             // Trace function call
-            trace($_SESSION['num_user'], "A Joué une partie multi", $cnx);
+            trace($numuser, "A Joué une partie multi", $cnx);
 
             // Log the received data
             error_log("Received score submission: Pseudo: $pseudo, Score: $score");
