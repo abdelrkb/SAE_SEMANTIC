@@ -41,7 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Contenu du mail
         $mail->isHTML(true);
         $mail->Subject = 'Réinitialisation de votre mot de passe';
-        $mail->Body = "Bonjour $pseudo,<br><br>Vous avez demandé la réinitialisation de votre mot de passe. Veuillez cliquer sur le lien suivant pour choisir un nouveau mot de passe : <a href='http://perso-etudiant.u-pem.fr/~chamsedine.amouche/Projet-SAE/forgotpassword/reset_password.php?code=$code_reinitialisation'>Réinitialiser le mot de passe</a>";
+        $mail->Body = "Bonjour $pseudo,<br><br>Vous avez demandé la réinitialisation de votre mot de passe. Veuillez cliquer sur le lien suivant pour choisir un nouveau mot de passe : <a href='http://perso-etudiant.u-pem.fr/~thamiz.sarboudine/SAE/SAE_SEMANTIC/forgotpassword/reset_password.php?code=$code_reinitialisation'>Réinitialiser le mot de passe</a>";
         $mail->CharSet = 'UTF-8';
         $mail->send();
 
