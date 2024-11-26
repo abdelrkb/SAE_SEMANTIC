@@ -18,7 +18,7 @@ $tracesOnlyMeRequest = $cnx->prepare("SELECT timestamp, ip_adress, action FROM S
 $tracesOnlyMeRequest->bindValue(':num_user', $_SESSION['num_user'], PDO::PARAM_INT);
 $tracesOnlyMeRequest->execute();
 $tracesOnlyMeResult = $tracesOnlyMeRequest->fetchAll(PDO::FETCH_OBJ);
-$tracesOnlyMeRequest->closeCursor();
+$tracesOnlyMeRequest->closeCursor();   
 ?>
 <!DOCTYPE html>
 <html>
